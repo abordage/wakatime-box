@@ -1,0 +1,20 @@
+name: "wakatime-box"
+author: "abordage"
+description: "Show your WakaTime statistics in a pinned gist for your GitHub profile"
+
+inputs:
+  GH_TOKEN:
+    description: 'GitHub token'
+    required: true
+
+  WAKA_API_KEY:
+    description: 'API key for your WakaTime account'
+    required: true
+
+runs:
+  using: "node16"
+  main: "dist/index.js"
+
+branding:
+  icon: "activity"
+  color: "blue"
