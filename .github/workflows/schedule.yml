@@ -17,5 +17,7 @@ jobs:
           WAKA_API_KEY: ${{ secrets.WAKA_API_KEY }}
 
           MAX_RESULT: 5
-          DATE_RANGE: last_7_days # supported: last_7_days, last_30_days, last_6_months, last_year
-          GIST_ID: 3ca87dc8189d1dd86a66374ed9177889 # REPLACE WITH YOUR GIST ID
+          # supported: last_7_days, last_30_days, last_6_months, last_year
+          DATE_RANGE: last_7_days
+          # REPLACE WITH YOUR GIST ID
+          GIST_ID: 3ca87dc8189d1dd86a66374ed9177889
