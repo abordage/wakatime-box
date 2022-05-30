@@ -18,4 +18,4 @@ jobs:
 
           MAX_RESULT: 5
           DATE_RANGE: last_7_days # supported: last_7_days, last_30_days, last_6_months, last_year
-          GIST_ID: 4ef3fc74af8d5febf26b55b8209ed24b # REPLACE WITH YOUR GIST ID
+          GIST_ID: 3ca87dc8189d1dd86a66374ed9177889 # REPLACE WITH YOUR GIST ID
