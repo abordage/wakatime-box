@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Update gist
-        uses: abordage/wakatime-gist@master
+        uses: abordage/wakatime-box@master
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           WAKA_API_KEY: ${{ secrets.WAKA_API_KEY }}
