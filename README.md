@@ -44,15 +44,9 @@ Automatically update your pinned gist with weekly (monthly, yearly) WakaTime sta
 It's all. Gist should update and show your WakaTime stats. Pin this gist on your profile!
 Next, statistics will be updated automatically every day.
 
-## Inspired From
-
-- [matchai/waka-box](https://github.com/matchai/waka-box)
-- [maxam2017/productive-box](https://github.com/maxam2017/productive-box)
-- and other [awesome pinned-gist project](https://github.com/matchai/awesome-pinned-gists)
-
 ## Feedback
 
-Find a bug or have a feature request? Open an issue, or better yet, submit a pull request - contribution welcome!
+If you have any feedback, comments or suggestions, please feel free to open an issue within this repository.
 
 ## Contributing
 
@@ -62,6 +56,12 @@ Please see [CONTRIBUTING](https://github.com/abordage/.github/blob/master/CONTRI
 
 - Pavel Bychko ([abordage](https://github.com/abordage))
 - [All Contributors](https://github.com/abordage/wakatime-box/graphs/contributors)
+
+## Inspired From
+
+- [matchai/waka-box](https://github.com/matchai/waka-box)
+- [maxam2017/productive-box](https://github.com/maxam2017/productive-box)
+- and other [awesome pinned-gist project](https://github.com/matchai/awesome-pinned-gists)
 
 ## License
 
