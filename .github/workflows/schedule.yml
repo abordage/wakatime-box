@@ -1,0 +1,20 @@
+name: Update Gist
+on:
+  schedule:
+    - cron: "50 4 * * *"
+
+  workflow_dispatch: # manual triggers with workflow_dispatch
+
+jobs:
+  update-gist:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Update gist
+        uses: abordage/wakatime-box@master
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          WAKA_API_KEY: ${{ secrets.WAKA_API_KEY }}
+          DATE_RANGE: last_7_days # last_7_days, last_30_days, last_6_months, last_year
+          MAX_RESULT: 5
+          GIST_ID: 4ef3fc74af8d5febf26b55b8209ed24b

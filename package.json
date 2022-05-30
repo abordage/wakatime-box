@@ -1,0 +1,32 @@
+{
+  "name": "wakatime-box",
+  "version": "1.0.0",
+  "description": "Your WakaTime statistics in a pinned gist for your github profile",
+  "scripts": {
+    "build": "tsc src/index.ts --outDir dist && ncc build dist/index.js --minify",
+    "lint": "eslint src/ --ext .ts --fix"
+  },
+  "keywords": ["wakatime", "wakatime-box", "pinned gist"],
+  "author": "Pavel Bychko <abordage.dev@gmail.com> (https://abordage.dev)",
+  "license": "MIT",
+  "dependencies": {
+    "@octokit/rest": "^18.12.0",
+    "axios": "^0.27.2",
+    "dotenv": "^16.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.36",
+    "@types/node-fetch": "^2.6.1",
+    "@typescript-eslint/eslint-plugin": "^5.26.0",
+    "@typescript-eslint/parser": "^5.26.0",
+    "@vercel/ncc": "^0.34.0",
+    "eslint": "^8.16.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "ts-node": "^10.8.0",
+    "tslib": "^2.4.0",
+    "typescript": "^4.7.2"
+  }
+}
