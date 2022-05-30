@@ -3,7 +3,7 @@ on:
   schedule:
     - cron: "50 4 * * *"
 
-  workflow_dispatch: # manual triggers with workflow_dispatch
+  workflow_dispatch:
 
 jobs:
   update-gist:
@@ -15,6 +15,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           WAKA_API_KEY: ${{ secrets.WAKA_API_KEY }}
-          DATE_RANGE: last_7_days # last_7_days, last_30_days, last_6_months, last_year
+
           MAX_RESULT: 5
-          GIST_ID: 4ef3fc74af8d5febf26b55b8209ed24b
+          DATE_RANGE: last_7_days # supported: last_7_days, last_30_days, last_6_months, last_year
+          GIST_ID: 4ef3fc74af8d5febf26b55b8209ed24b # REPLACE WITH YOUR GIST ID
