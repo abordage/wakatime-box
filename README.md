@@ -28,17 +28,17 @@ Automatically update your pinned gist with weekly (monthly, yearly) WakaTime sta
 ## How it works
 
 1. [Create](https://wakatime.com/signup) WakaTime account (it's free)
-2. Enable `Display code time publicly` and `Display languages, editors, os, categories publicly` in
+2. **Enable** `Display code time publicly` and `Display languages, editors, os, categories publicly` in
    WakaTime [profile settings](https://wakatime.com/settings/profile)
-3. Copy WakaTime [API Key](https://wakatime.com/settings/api-key)
-4. [Create a token](https://github.com/settings/tokens/new) in your GitHub account settings with the `gist scope` only and copy
+3. **Copy** WakaTime [API Key](https://wakatime.com/settings/api-key)
+4. [Create a token](https://github.com/settings/tokens/new) in your GitHub account settings with the `gist scope` only and **copy**
    it
-5. Fork this repo
+5. **Fork** this repo
 6. In your fork go to **Settings > Secrets > Actions secrets**
-7. Create new **Environment secrets:**
+7. **Create** new **Environment secrets:**
     - `GH_TOKEN`: GitHub token generated earlier
     - `WAKA_API_KEY`: API key for your WakaTime account
-8. Replace `GIST_ID` in the file`.github/workflows/schedule.yml`
+8. **Replace** `GIST_ID` in the file`.github/workflows/schedule.yml`
 9. Go to **Actions > Update Gist** and **Run workflow**
 
 It's all. Gist should update and show your WakaTime stats. Pin this gist on your profile!
