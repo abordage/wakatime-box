@@ -2,7 +2,21 @@
 
 Automatically update your pinned gist with weekly (monthly, yearly) WakaTime statistics.
 
-![alt text](./docs/images/example-830.png "Title")
+![WakaTime Statistics Gist](./docs/images/example-830-rounded.png "WakaTime Statistics Gist")
+
+
+<p style="text-align: center;" align="center">
+
+<a href="https://github.com/abordage" title="language">
+    <img alt="language" src="https://img.shields.io/badge/language-typescript-blue">
+</a>
+
+<a href="https://github.com/abordage/wakatime-box/blob/master/LICENSE.md" title="License">
+    <img alt="License" src="https://img.shields.io/github/license/abordage/wakatime-box">
+</a>
+
+</p>
+
 
 [▶ **See example**](https://github.com/abordage)
 
