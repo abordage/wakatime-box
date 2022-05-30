@@ -16,5 +16,5 @@ runs:
   main: "dist/index.js"
 
 branding:
-  icon: "activity"
+  icon: "paperclip"
   color: "blue"
