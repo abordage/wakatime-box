@@ -66,9 +66,9 @@ if (!ranges.includes(range)) {
 
   if (lines.length === 0) return;
 
-  let title: string = 'latest';
-  if (range === 'last_7_days') title = 'weekly';
-  if (range === 'last_30_days') title = 'monthly';
+  let title: string = 'Latest';
+  if (range === 'last_7_days') title = 'Weekly';
+  if (range === 'last_30_days') title = 'Monthly';
   const updateDate = new Date().toLocaleDateString('en-us', {day: 'numeric', year: 'numeric', month: 'short'});
 
   /**
@@ -85,7 +85,7 @@ if (!ranges.includes(range)) {
     gist_id: process.env.GIST_ID || '',
     files: {
       [filename]: {
-        filename: title + ' development (upd ' + updateDate + ')',
+        filename: title + ' statistics [update ' + updateDate + ']',
         content: lines.join('\n'),
       },
     },
