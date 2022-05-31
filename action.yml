@@ -11,6 +11,10 @@ inputs:
     description: 'API key for your WakaTime account'
     required: true
 
+  jobSummary:
+    description: "Write Github job summary at the end of the job (written on Markdown output only)"
+    required: false
+
 runs:
   using: "node16"
   main: "dist/index.js"
