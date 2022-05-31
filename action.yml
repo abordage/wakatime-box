@@ -11,6 +11,9 @@ inputs:
     description: 'API key for your WakaTime account'
     required: true
 
+  IS_PROD:
+    default: true
+
 runs:
   using: "node16"
   main: "dist/index.js"
