@@ -21,3 +21,4 @@ jobs:
           INPUT_MAX_RESULT: 5
           INPUT_GH_TOKEN: ${{ secrets.GH_TOKEN }}
           INPUT_WAKA_API_KEY: ${{ secrets.WAKA_API_KEY }}
+          INPUT_IS_PROD: true
