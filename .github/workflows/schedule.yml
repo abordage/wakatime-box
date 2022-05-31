@@ -14,13 +14,13 @@ jobs:
       - name: Update gist
         uses: abordage/wakatime-box@master
         env:
-          # REPLACE WITH YOUR GIST ID
-          INPUT_GIST_ID: 3ca87dc8189d1dd86a66374ed9177889
-
           # SUPPORTED: last_7_days, last_30_days, last_6_months, last_year
           INPUT_DATE_RANGE: last_7_days
-
+          # NUMBER OF LANGUAGES DISPLAYED
           INPUT_MAX_RESULT: 5
+          #
+          INPUT_PRINT_SUMMARY: true
+
           INPUT_GH_TOKEN: ${{ secrets.GH_TOKEN }}
           INPUT_WAKA_API_KEY: ${{ secrets.WAKA_API_KEY }}
-          INPUT_PRINT_SUMMARY: true
+          INPUT_GIST_ID: ${{ secrets.GIST_ID }}
