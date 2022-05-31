@@ -78,6 +78,9 @@ if (!['last_7_days', 'last_30_days', 'last_6_months', 'last_year'].includes(rang
     },
   }).catch(error => core.setFailed(`Action failed with error: Gist ${error.message}`));
 
+  /**
+   * Print summary
+   */
   if (PRINT_SUMMARY) {
     await core.summary
       .addHeading('Results')
