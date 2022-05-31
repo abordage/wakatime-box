@@ -63,13 +63,13 @@ if (!['last_7_days', 'last_30_days', 'last_6_months', 'last_year'].includes(rang
    * Update gist
    */
   const octokit = new Octokit({auth: `token ${GH_TOKEN}`});
-  const gist = await octokit.gists.get({gist_id: GIST_ID || ''})
+  const gist = await octokit.gists.get({gist_id: GIST_ID})
     .catch(error => core.setFailed(`Action failed with error: Gist ${error.message}`));
   if (!gist) return;
 
   const filename = Object.keys(gist.data.files || {})[0];
   await octokit.gists.update({
-    gist_id: GIST_ID || '',
+    gist_id: GIST_ID,
     files: {
       [filename]: {
         filename: title + ' statistics [update ' + updateDate + ']',
