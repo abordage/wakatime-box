@@ -40,14 +40,17 @@ Automatically update your pinned gist with weekly (monthly, yearly) WakaTime sta
     - `GH_TOKEN`: GitHub token generated earlier
     - `WAKA_API_KEY`: API key for your WakaTime account
 8. **Replace** `INPUT_GIST_ID` in the file`.github/workflows/schedule.yml`
-9. Go to **Actions > Update Gist** and **Run workflow**
 
-It's all. Gist should update and show your WakaTime stats. Next, statistics will be updated automatically every day.
-Pin this gist on your profile!
+It's all. Go to **Actions > Update Gist** and **Run workflow**. Gist should update and show your WakaTime stats. 
+Next, statistics will be updated automatically every day. Pin this gist on your profile!
 
-> Inspired from [matchai/waka-box](https://github.com/matchai/waka-box) and
-  other [awesome pinned-gist project](https://github.com/matchai/awesome-pinned-gists)
+> Inspired from [matchai/waka-box](https://github.com/matchai/waka-box) and other [awesome pinned-gist project](https://github.com/matchai/awesome-pinned-gists)
 
+## Compared to package `matchai/waka-box`:
+1. customizable **time range**
+2. customizable **number of languages**
+3. correct time counting of **other languages**
+4. **summary report** on action
 
 ## Feedback
 
