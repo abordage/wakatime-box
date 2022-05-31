@@ -3,15 +3,15 @@ author: "abordage"
 description: "Show your WakaTime statistics in a pinned gist for your GitHub profile"
 
 inputs:
-  GH_TOKEN:
+  INPUT_GH_TOKEN:
     description: 'GitHub token'
     required: true
 
-  WAKA_API_KEY:
+  INPUT_WAKA_API_KEY:
     description: 'API key for your WakaTime account'
     required: true
 
-  IS_PROD:
+  INPUT_IS_PROD:
     default: true
 
 runs:
