@@ -109,7 +109,7 @@ if (!ranges.includes(range)) range = 'last_7_days';
   }).catch(error => stepError('github.com: Gist ' + error.message));
 
   console.log('"✔ statistics received" >> $GITHUB_STEP_SUMMARY');
-  console.log('"✔ gist updated\n" >> $GITHUB_STEP_SUMMARY');
+  console.log('"✔ gist updated" >> $GITHUB_STEP_SUMMARY');
   console.log('"" >> $GITHUB_STEP_SUMMARY');
   console.log('"[wakatime-gist](https://github.com/marketplace/actions/wakatime-gist)" >> $GITHUB_STEP_SUMMARY');
 })();
