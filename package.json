@@ -6,10 +6,15 @@
     "build": "tsc src/index.ts --outDir dist && ncc build dist/index.js --minify",
     "lint": "eslint src/ --ext .ts --fix"
   },
-  "keywords": ["wakatime", "wakatime-box", "pinned gist"],
+  "keywords": [
+    "wakatime",
+    "wakatime-box",
+    "pinned gist"
+  ],
   "author": "Pavel Bychko <abordage.dev@gmail.com> (https://abordage.dev)",
   "license": "MIT",
   "dependencies": {
+    "@actions/core": "^1.8.2",
     "@octokit/rest": "^18.12.0",
     "axios": "^0.27.2",
     "dotenv": "^16.0.1"

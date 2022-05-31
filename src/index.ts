@@ -1,40 +1,21 @@
-import {resolve} from 'path';
-import {config} from 'dotenv';
+import * as core from '@actions/core';
 import {Octokit} from '@octokit/rest';
-import generateBarChart from './generateBarChart';
+import {config} from 'dotenv';
+import {resolve} from 'path';
 import convertSeconds from './convertSeconds';
-
+import generateBarChart from './generateBarChart';
 const axios = require('axios');
 
+
 config({path: resolve(__dirname, '../.env')});
+const GH_TOKEN = process.env.GH_TOKEN || core.getInput('GH_TOKEN', {required: true});
+const WAKA_API_KEY = process.env.WAKA_API_KEY || core.getInput('WAKA_API_KEY', {required: true});
+const GIST_ID = process.env.GIST_ID || core.getInput('GIST_ID', {required: true});
+const MAX_RESULT = core.getInput('MAX_RESULT', {required: false});
+const DATE_RANGE = core.getInput('DATE_RANGE', {required: false});
 
-const {
-  GH_TOKEN,
-  WAKA_API_KEY,
-  GIST_ID,
-  MAX_RESULT,
-  DATE_RANGE
-} = process.env;
-
-const ranges: string[] = [
-  'last_7_days',
-  'last_30_days',
-  'last_6_months',
-  'last_year'
-];
-
-if (!GH_TOKEN) {
-  throw new Error('GH_TOKEN is not provided.');
-}
-if (!WAKA_API_KEY) {
-  throw new Error('WAKA_API_KEY is not provided.');
-}
-if (!GIST_ID) {
-  throw new Error('GIST_ID is not provided.');
-}
-
-let range: string = String(DATE_RANGE);
-if (!ranges.includes(range)) range = 'last_7_days';
+let range: string = DATE_RANGE;
+if (!['last_7_days', 'last_30_days', 'last_6_months', 'last_year'].includes(range)) range = 'last_7_days';
 
 (async () => {
   /**
@@ -44,7 +25,7 @@ if (!ranges.includes(range)) range = 'last_7_days';
     baseURL: 'https://wakatime.com/api/v1/',
     headers: {Authorization: `Basic ${Buffer.from(WAKA_API_KEY || '').toString('base64')}`},
   }).catch(function (error: Error) {
-    stepError('wakatime.com: ' + error.message);
+    core.setFailed(`Action failed with error ${error.message}`);
   });
 
   /**
@@ -94,7 +75,7 @@ if (!ranges.includes(range)) range = 'last_7_days';
    */
   const octokit = new Octokit({auth: `token ${GH_TOKEN}`});
   const gist = await octokit.gists.get({gist_id: GIST_ID || ''})
-    .catch(error => stepError('github.com: Gist ' + error.message));
+    .catch(error => core.setFailed(`Action failed with error: Gist ${error.message}`));
   if (!gist) return;
 
   const filename = Object.keys(gist.data.files || {})[0];
@@ -106,17 +87,21 @@ if (!ranges.includes(range)) range = 'last_7_days';
         content: lines.join('\n'),
       },
     },
-  }).catch(error => stepError('github.com: Gist ' + error.message));
+  }).catch(error => core.setFailed(`Action failed with error: Gist ${error.message}`));
 
-  process.env.GITHUB_STEP_SUMMARY
-    = '✔ statistics received\n✔ gist updated\n\n[wakatime-gist](https://github.com/marketplace/actions/wakatime-gist)';
+
+  await core.summary
+    .addHeading('Results')
+    .addTable([
+      [{data: 'Action', header: true}, {data: 'Result', header: true}],
+      ['Statistics received', 'Pass '],
+      ['Gist updated', 'Pass ']
+    ])
+    .addBreak()
+    .addLink('wakatime-gist', 'https://github.com/marketplace/actions/wakatime-gist')
+    .write();
 })();
 
 function cutStr(str: string, len: number) {
   return str.length > len ? str.substring(0, len - 3) + '...' : str;
-}
-
-function stepError(stepMessage: string) {
-  process.env.GITHUB_STEP_SUMMARY = '❌ ' + stepMessage;
-  throw new Error(stepMessage);
 }
