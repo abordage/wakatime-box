@@ -2,6 +2,12 @@
 
 All notable changes to `wakatime-box` will be documented in this file.
 
+## 1.1.0 - 2022-05-31
+
+Add support for GitHub Job Summaries
+
+**Full Changelog**: https://github.com/abordage/wakatime-box/compare/1.0.6...1.1.0
+
 ## 1.0.6 - 2022-05-31
 
 **Full Changelog**: https://github.com/abordage/wakatime-box/compare/1.0.5...1.0.6
