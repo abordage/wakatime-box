@@ -8,15 +8,33 @@ const axios = require('axios');
 
 config({path: resolve(__dirname, '../.env')});
 
-function cutStr(str: string, len: number) {
-  return str.length > len ? str.substring(0, len - 3) + '...' : str;
+const {
+  GH_TOKEN,
+  WAKA_API_KEY,
+  GIST_ID,
+  MAX_RESULT,
+  DATE_RANGE
+} = process.env;
+
+const ranges: string[] = [
+  'last_7_days',
+  'last_30_days',
+  'last_6_months',
+  'last_year'
+];
+
+if (!GH_TOKEN) {
+  throw new Error('GH_TOKEN is not provided.');
+}
+if (!WAKA_API_KEY) {
+  throw new Error('WAKA_API_KEY is not provided.');
+}
+if (!GIST_ID) {
+  throw new Error('GIST_ID is not provided.');
 }
 
-const ranges: string[] = ['last_7_days', 'last_30_days', 'last_6_months', 'last_year'];
-let range: string = String(process.env.DATE_RANGE);
-if (!ranges.includes(range)) {
-  range = 'last_7_days';
-}
+let range: string = String(DATE_RANGE);
+if (!ranges.includes(range)) range = 'last_7_days';
 
 (async () => {
   /**
@@ -24,16 +42,16 @@ if (!ranges.includes(range)) {
    */
   const response = await axios.get('users/current/stats/' + range, {
     baseURL: 'https://wakatime.com/api/v1/',
-    headers: {Authorization: `Basic ${Buffer.from(process.env.WAKA_API_KEY || '').toString('base64')}`}
-  }).catch(function () {
-    return;
+    headers: {Authorization: `Basic ${Buffer.from(WAKA_API_KEY || '').toString('base64')}`},
+  }).catch(function (error: Error) {
+    throw new Error('wakatime.com: ' + error.message);
   });
 
   /**
    * Formatting
    */
   const myStats = response.data.data;
-  const maxResult: number = Number(process.env.MAX_RESULT) || 10;
+  const maxResult: number = Number(MAX_RESULT) || 5;
 
   let allOtherTime = 0;
   let allOtherPercent = 0;
@@ -44,7 +62,7 @@ if (!ranges.includes(range)) {
       cutStr(name, 10).padEnd(12),
       convertSeconds(total_seconds).padEnd(11),
       generateBarChart(percent, 21),
-      String(percent.toFixed(1)).padStart(5) + '%'
+      String(percent.toFixed(1)).padStart(5) + '%',
     ];
 
     if (name == 'Other' || prev.length >= maxResult - 1) {
@@ -60,7 +78,7 @@ if (!ranges.includes(range)) {
     cutStr('Other lang', 10).padEnd(12),
     convertSeconds(allOtherTime).padEnd(11),
     generateBarChart(allOtherPercent, 21),
-    String(allOtherPercent.toFixed(1)).padStart(5) + '%'
+    String(allOtherPercent.toFixed(1)).padStart(5) + '%',
   ];
   lines.push(lastLine.join(' '));
 
@@ -74,21 +92,27 @@ if (!ranges.includes(range)) {
   /**
    * Update gist
    */
-  const octokit = new Octokit({auth: `token ${process.env.GH_TOKEN}`});
-  const gist = await octokit.gists.get({gist_id: process.env.GIST_ID || ''})
-    .catch(error => console.error(`Unable to update gist\n${error}`));
-
-  if (!gist) return;
+  const octokit = new Octokit({auth: `token ${GH_TOKEN}`});
+  const gist = await octokit.gists.get({gist_id: GIST_ID || ''})
+    .catch(function (error) {
+      throw new Error('github.com: Gist ' + error.message);
+    });
 
   const filename = Object.keys(gist.data.files || {})[0];
   await octokit.gists.update({
-    gist_id: process.env.GIST_ID || '',
+    gist_id: GIST_ID || '',
     files: {
       [filename]: {
         filename: title + ' statistics [update ' + updateDate + ']',
         content: lines.join('\n'),
       },
     },
+  }).catch(function (error: Error) {
+    throw new Error('github.com: Gist ' + error.message);
   });
 
 })();
+
+function cutStr(str: string, len: number) {
+  return str.length > len ? str.substring(0, len - 3) + '...' : str;
+}
