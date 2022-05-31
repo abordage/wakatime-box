@@ -15,8 +15,8 @@
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.8.2",
+    "@actions/http-client": "^2.0.1",
     "@octokit/rest": "^18.12.0",
-    "axios": "^0.27.2",
     "dotenv": "^16.0.1"
   },
   "devDependencies": {
