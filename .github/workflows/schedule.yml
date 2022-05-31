@@ -1,9 +1,9 @@
 name: Update Gist
+
 on:
+  workflow_dispatch:
   schedule:
     - cron: "10 3 * * *"
-
-  workflow_dispatch:
 
 jobs:
   update-gist:
