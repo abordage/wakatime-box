@@ -12,7 +12,7 @@ const WAKA_API_KEY = core.getInput('WAKA_API_KEY', {required: true});
 const GIST_ID = core.getInput('GIST_ID', {required: true});
 const MAX_RESULT = Number(core.getInput('MAX_RESULT', {required: true}));
 const DATE_RANGE = core.getInput('DATE_RANGE', {required: false});
-const IS_PROD = core.getBooleanInput('IS_PROD', {required: true});
+const PRINT_SUMMARY = core.getBooleanInput('PRINT_SUMMARY', {required: true});
 
 let range: string = DATE_RANGE;
 if (!['last_7_days', 'last_30_days', 'last_6_months', 'last_year'].includes(range)) range = 'last_7_days';
@@ -21,7 +21,7 @@ if (!['last_7_days', 'last_30_days', 'last_6_months', 'last_year'].includes(rang
   /**
    * Get statistics
    */
-  const httpClient = new HttpClient('WakaTime-Gist/1.1 +https://github.com/marketplace/actions/wakatime-gist');
+  const httpClient = new HttpClient('WakaTime-Gist/1.2 +https://github.com/marketplace/actions/wakatime-gist');
   const response = await httpClient.getJson('https://wakatime.com/api/v1/users/current/stats/' + range,
     {Authorization: `Basic ${Buffer.from(WAKA_API_KEY || '').toString('base64')}`})
     .catch(error => core.setFailed(`Action failed with error ${error.message}`));
@@ -78,7 +78,7 @@ if (!['last_7_days', 'last_30_days', 'last_6_months', 'last_year'].includes(rang
     },
   }).catch(error => core.setFailed(`Action failed with error: Gist ${error.message}`));
 
-  if (IS_PROD) {
+  if (PRINT_SUMMARY) {
     await core.summary
       .addHeading('Results')
       .addTable([

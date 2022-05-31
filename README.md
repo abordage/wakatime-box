@@ -31,18 +31,23 @@ Automatically update your pinned gist with weekly (monthly, yearly) WakaTime sta
 2. **Enable** `Display code time publicly` and `Display languages, editors, os, categories publicly` in
    WakaTime [profile settings](https://wakatime.com/settings/profile)
 3. **Copy** WakaTime [API Key](https://wakatime.com/settings/api-key)
-4. [Create a token](https://github.com/settings/tokens/new) in your GitHub account settings with the `gist scope` only and **copy**
+4. [Create a token](https://github.com/settings/tokens/new) in your GitHub account settings with the `gist scope` only
+   and **copy**
    it
 5. **Fork** this repo
 6. In your fork go to **Settings > Secrets > Actions secrets**
 7. **Create** new **Environment secrets:**
     - `GH_TOKEN`: GitHub token generated earlier
     - `WAKA_API_KEY`: API key for your WakaTime account
-8. **Replace** `GIST_ID` in the file`.github/workflows/schedule.yml`
+8. **Replace** `INPUT_GIST_ID` in the file`.github/workflows/schedule.yml`
 9. Go to **Actions > Update Gist** and **Run workflow**
 
-It's all. Gist should update and show your WakaTime stats. Pin this gist on your profile!
-Next, statistics will be updated automatically every day.
+It's all. Gist should update and show your WakaTime stats. Next, statistics will be updated automatically every day.
+Pin this gist on your profile!
+
+> Inspired from [matchai/waka-box](https://github.com/matchai/waka-box) and
+  other [awesome pinned-gist project](https://github.com/matchai/awesome-pinned-gists)
+
 
 ## Feedback
 
@@ -56,12 +61,6 @@ Please see [CONTRIBUTING](https://github.com/abordage/.github/blob/master/CONTRI
 
 - Pavel Bychko ([abordage](https://github.com/abordage))
 - [All Contributors](https://github.com/abordage/wakatime-box/graphs/contributors)
-
-## Inspired From
-
-- [matchai/waka-box](https://github.com/matchai/waka-box)
-- [maxam2017/productive-box](https://github.com/maxam2017/productive-box)
-- and other [awesome pinned-gist project](https://github.com/matchai/awesome-pinned-gists)
 
 ## License
 

@@ -1,6 +1,6 @@
 {
   "name": "wakatime-box",
-  "version": "1.0.0",
+  "version": "1.2.1",
   "description": "Show your WakaTime statistics in a pinned gist for your GitHub profile",
   "scripts": {
     "build": "tsc src/index.ts --outDir dist && ncc build dist/index.js --minify",

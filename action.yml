@@ -11,7 +11,11 @@ inputs:
     description: 'API key for your WakaTime account'
     required: true
 
-  INPUT_IS_PROD:
+  INPUT_GIST_ID:
+    description: 'Gist Id'
+    required: true
+
+  INPUT_PRINT_SUMMARY:
     default: true
 
 runs:
