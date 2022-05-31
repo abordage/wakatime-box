@@ -3,8 +3,7 @@ import {HttpClient} from '@actions/http-client';
 import {Octokit} from '@octokit/rest';
 import {config} from 'dotenv';
 import {resolve} from 'path';
-import convertSeconds from './convertSeconds';
-import generateBarChart from './generateBarChart';
+import formatLine from './formatLine';
 
 config({path: resolve(__dirname, '../.env')});
 
@@ -36,22 +35,22 @@ if (!['last_7_days', 'last_30_days', 'last_6_months', 'last_year'].includes(rang
   /**
    * Formatting
    */
-  let allOtherTime = 0;
-  let allOtherPercent = 0;
+  let otherTotalSeconds = 0;
+  let otherPercent = 0;
   const lines = languages.reduce((prev: any[], cur: any) => {
     const {name, percent, total_seconds} = cur;
     const line = formatLine(name, total_seconds, percent);
 
     if (name == 'Other' || prev.length >= MAX_RESULT - 1) {
-      allOtherTime += total_seconds;
-      allOtherPercent += percent;
+      otherTotalSeconds += total_seconds;
+      otherPercent += percent;
       return prev;
     }
 
     return [...prev, line];
   }, []);
 
-  lines.push(formatLine('Other lang', allOtherTime, allOtherPercent));
+  lines.push(formatLine('Other lang', otherTotalSeconds, otherPercent));
   if (lines.length === 0) return;
 
   let title: string = 'Latest';
@@ -91,16 +90,3 @@ if (!['last_7_days', 'last_30_days', 'last_6_months', 'last_year'].includes(rang
       .write();
   }
 })();
-
-function cutStr(str: string, len: number) {
-  return str.length > len ? str.substring(0, len - 3) + '...' : str;
-}
-
-function formatLine(name: string, total_seconds: number, percent: number) {
-  return [
-    cutStr(name, 10).padEnd(12),
-    convertSeconds(total_seconds).padEnd(11),
-    generateBarChart(percent, 21),
-    String(percent.toFixed(1)).padStart(5) + '%',
-  ].join(' ');
-}

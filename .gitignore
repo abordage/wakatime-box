@@ -2,5 +2,4 @@ node_modules
 *.log
 .idea
 .env
-/dist/convertSeconds.js
-/dist/generateBarChart.js
+/dist/formatLine.js
