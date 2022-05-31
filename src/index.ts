@@ -108,10 +108,10 @@ if (!ranges.includes(range)) range = 'last_7_days';
     },
   }).catch(error => stepError('github.com: Gist ' + error.message));
 
-  console.log('"✔ statistics received" >> $GITHUB_STEP_SUMMARY');
-  console.log('"✔ gist updated" >> $GITHUB_STEP_SUMMARY');
-  console.log('"" >> $GITHUB_STEP_SUMMARY');
-  console.log('"[wakatime-gist](https://github.com/marketplace/actions/wakatime-gist)" >> $GITHUB_STEP_SUMMARY');
+  console.log('echo "✔ statistics received" >> $GITHUB_STEP_SUMMARY');
+  console.log('echo "✔ gist updated" >> $GITHUB_STEP_SUMMARY');
+  console.log('echo "" >> $GITHUB_STEP_SUMMARY');
+  console.log('echo "[wakatime-gist](https://github.com/marketplace/actions/wakatime-gist)" >> $GITHUB_STEP_SUMMARY');
 })();
 
 function cutStr(str: string, len: number) {
@@ -119,6 +119,6 @@ function cutStr(str: string, len: number) {
 }
 
 function stepError(stepMessage: string) {
-  console.log('"❌ ' + stepMessage + '" >> $GITHUB_STEP_SUMMARY');
+  console.log('echo "❌ ' + stepMessage + '" >> $GITHUB_STEP_SUMMARY');
   throw new Error(stepMessage);
 }
