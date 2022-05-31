@@ -28,7 +28,7 @@ Automatically update your pinned gist with weekly (monthly, yearly) WakaTime sta
 ## How it works
 
 1. [Create](https://wakatime.com/signup) WakaTime account (it's free)
-2. **Enable** `Display code time publicly` and `Display languages, editors, os, categories publicly` in
+2. **Enable** `Display code time publicly` and `Display languages, editors...` in
    WakaTime [profile settings](https://wakatime.com/settings/profile)
 3. **Copy** WakaTime [API Key](https://wakatime.com/settings/api-key)
 4. [Create a token](https://github.com/settings/tokens/new) in your GitHub account settings with the `gist scope` only
