@@ -10,7 +10,7 @@ config({path: resolve(__dirname, '../.env')});
 const GH_TOKEN = core.getInput('GH_TOKEN', {required: true});
 const WAKA_API_KEY = core.getInput('WAKA_API_KEY', {required: true});
 const GIST_ID = core.getInput('GIST_ID', {required: true});
-const MAX_RESULT = Number(core.getInput('MAX_RESULT', {required: false})) || 5;
+const MAX_RESULT = Number(core.getInput('MAX_RESULT', {required: true}));
 const DATE_RANGE = core.getInput('DATE_RANGE', {required: false});
 const IS_PROD = core.getBooleanInput('IS_PROD', {required: true});
 
