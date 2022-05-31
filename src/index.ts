@@ -44,7 +44,7 @@ if (!ranges.includes(range)) range = 'last_7_days';
     baseURL: 'https://wakatime.com/api/v1/',
     headers: {Authorization: `Basic ${Buffer.from(WAKA_API_KEY || '').toString('base64')}`},
   }).catch(function (error: Error) {
-    throw new Error('wakatime.com: ' + error.message);
+    stepError('wakatime.com: ' + error.message);
   });
 
   /**
@@ -94,9 +94,8 @@ if (!ranges.includes(range)) range = 'last_7_days';
    */
   const octokit = new Octokit({auth: `token ${GH_TOKEN}`});
   const gist = await octokit.gists.get({gist_id: GIST_ID || ''})
-    .catch(function (error) {
-      throw new Error('github.com: Gist ' + error.message);
-    });
+    .catch(error => stepError('github.com: Gist ' + error.message));
+  if (!gist) return;
 
   const filename = Object.keys(gist.data.files || {})[0];
   await octokit.gists.update({
@@ -107,12 +106,19 @@ if (!ranges.includes(range)) range = 'last_7_days';
         content: lines.join('\n'),
       },
     },
-  }).catch(function (error: Error) {
-    throw new Error('github.com: Gist ' + error.message);
-  });
+  }).catch(error => stepError('github.com: Gist ' + error.message));
 
+  console.log('"✔ statistics received" >> $GITHUB_STEP_SUMMARY');
+  console.log('"✔ gist updated\n" >> $GITHUB_STEP_SUMMARY');
+  console.log('"" >> $GITHUB_STEP_SUMMARY');
+  console.log('"[wakatime-gist](https://github.com/marketplace/actions/wakatime-gist)" >> $GITHUB_STEP_SUMMARY');
 })();
 
 function cutStr(str: string, len: number) {
   return str.length > len ? str.substring(0, len - 3) + '...' : str;
+}
+
+function stepError(stepMessage: string) {
+  console.log('"❌ ' + stepMessage + '" >> $GITHUB_STEP_SUMMARY');
+  throw new Error(stepMessage);
 }
