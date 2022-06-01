@@ -34,14 +34,14 @@ title = title + ' statistics [update ' + updateDate + ']';
   const httpClient = new HttpClient(USER_AGENT);
   const response = await httpClient.getJson('https://wakatime.com/api/v1/users/current/stats/' + range,
     {Authorization: `Basic ${Buffer.from(WAKA_API_KEY).toString('base64')}`})
-    .catch(error => core.setFailed('Action failed with error: ' + error.message));
+    .catch(error => core.setFailed('Action failed: ' + error.message));
 
   // @ts-ignore
   const languages: any[] = response.result.data.languages;
   if (languages) {
     summaryTable.push(['Statistics received', '✔']);
   } else {
-    core.setFailed('Action failed with error: empty response from wakatime.com');
+    core.setFailed('Action failed: empty response from wakatime.com');
     return;
   }
 
@@ -64,17 +64,24 @@ title = title + ' statistics [update ' + updateDate + ']';
   }, []);
 
   lines.push(formatLine('Other lang', otherTotalSeconds, otherPercent));
-  if (lines.length === 0) return core.notice('No statistics for the last time period. Gist not updated');
+  if (lines.length === 0) {
+    core.notice('No statistics for the last time period. Gist not updated');
+    return;
+  }
 
   /**
    * Get gist filename
    */
-  const octokit = new Octokit({auth: `token ${GH_TOKEN}`});
+  const octokit = new Octokit({auth: GH_TOKEN});
   const gist = await octokit.gists.get({gist_id: GIST_ID})
-    .catch(error => core.setFailed('Action failed with error: Gist ' + error.message));
+    .catch(error => core.setFailed('Action failed: Gist ' + error.message));
   if (!gist) return;
 
   const filename = Object.keys(gist.data.files || {})[0];
+  if (!filename) {
+    core.setFailed('Action failed: Gist filename not found');
+    return;
+  }
 
   /**
    * Update gist
@@ -87,7 +94,7 @@ title = title + ' statistics [update ' + updateDate + ']';
         content: lines.join('\n'),
       },
     },
-  }).catch(error => core.setFailed('Action failed with error: Gist ' + error.message));
+  }).catch(error => core.setFailed('Action failed: Gist ' + error.message));
 
   summaryTable.push(['Gist updated', '✔']);
 
