@@ -9,8 +9,7 @@ config({path: resolve(__dirname, '../.env')});
 
 const GH_TOKEN = core.getInput('GH_TOKEN', {required: true});
 const WAKA_API_KEY = core.getInput('WAKA_API_KEY', {required: true});
-// const GIST_ID = core.getInput('GIST_ID', {required: true});
-const GIST_ID = 'test-on-github';
+const GIST_ID = core.getInput('GIST_ID', {required: true});
 const MAX_RESULT = Number(core.getInput('MAX_RESULT', {required: true}));
 const DATE_RANGE = core.getInput('DATE_RANGE', {required: false});
 const PRINT_SUMMARY = core.getBooleanInput('PRINT_SUMMARY', {required: true});
@@ -35,14 +34,14 @@ title = title + ' statistics [update ' + updateDate + ']';
   const httpClient = new HttpClient(USER_AGENT);
   const response = await httpClient.getJson('https://wakatime.com/api/v1/users/current/stats/' + range,
     {Authorization: `Basic ${Buffer.from(WAKA_API_KEY).toString('base64')}`})
-    .catch(error => actionFail(error.message));
+    .catch(error => core.setFailed('Action failed with error: ' + error.message));
 
   // @ts-ignore
   const languages: any[] = response.result.data.languages;
-  if (languages) {
+  if (!languages) {
     summaryTable.push(['Statistics received', '✔']);
   } else {
-    return actionFail('Empty response from wakatime.com');
+    core.setFailed('Action failed with error: empty response from wakatime.com');
   }
 
   /**
@@ -64,14 +63,14 @@ title = title + ' statistics [update ' + updateDate + ']';
   }, []);
 
   lines.push(formatLine('Other lang', otherTotalSeconds, otherPercent));
-  if (lines.length === 0) return actionInfo('No statistics for the last time period. Gist not updated');
+  if (lines.length === 0) return core.notice('No statistics for the last time period. Gist not updated');
 
   /**
    * Get gist filename
    */
   const octokit = new Octokit({auth: `token ${GH_TOKEN}`});
   const gist = await octokit.gists.get({gist_id: GIST_ID})
-    .catch(error => actionFail('Gist ' + error.message));
+    .catch(error => core.setFailed('Action failed with error: Gist ' + error.message));
   if (!gist) return;
 
   const filename = Object.keys(gist.data.files || {})[0];
@@ -87,54 +86,22 @@ title = title + ' statistics [update ' + updateDate + ']';
         content: lines.join('\n'),
       },
     },
-  }).catch(error => actionFail('Gist ' + error.message));
+  }).catch(error => core.setFailed('Action failed with error: Gist ' + error.message));
 
   summaryTable.push(['Gist updated', '✔']);
 
   /**
    * Print summary
    */
-  await actionSuccess();
-})();
-
-async function actionSuccess() {
   const summary = core.summary
     .addHeading('Results')
     .addTable(summaryTable)
     .addBreak()
     .addLink('wakatime-gist', ACTION_URL);
 
-  await printSummary(summary);
-}
-
-async function actionInfo(mess: string) {
-  const summary = core.summary
-    .addHeading('Results')
-    .addRaw(mess)
-    .addBreak()
-    .addLink('wakatime-gist', ACTION_URL);
-
-  await printSummary(summary);
-  core.notice(mess);
-}
-
-async function actionFail(mess: string) {
-  mess = 'Action failed with error: ' + mess;
-
-  const summary = core.summary
-    .addHeading('Results')
-    .addRaw(mess)
-    .addBreak()
-    .addLink('Check README', ACTION_URL);
-
-  await printSummary(summary);
-  core.setFailed(mess);
-}
-
-async function printSummary(summary: typeof core.summary) {
   if (PRINT_SUMMARY) {
     await summary.write();
   } else {
     console.log(summary.stringify());
   }
-}
+})();
