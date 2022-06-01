@@ -39,15 +39,15 @@ Automatically update your pinned gist with weekly (monthly, yearly) WakaTime sta
 4. [**Create**](https://github.com/settings/tokens/new) a token in your GitHub account settings with the `gist scope`
    only
    and **copy** it
-5. [**Create**](https://gist.github.com) a new public Gist and copy GIST_ID from url
+5. [**Create**](https://gist.github.com) a new **public** Gist and copy ID from url (string after last slash)
 6. **Fork** this repo
-7. Go to **Settings > Secrets > Actions secrets** in **your fork**
+7. Go to **Settings** > **Secrets** > **Actions secrets** in **your fork**
 8. **Create** new **Environment secrets:**
     - `GH_TOKEN`: GitHub token generated earlier
     - `WAKA_API_KEY`: API key for your WakaTime account
-    - `GIST_ID`: API key for your WakaTime account
+    - `GIST_ID`: your Gist ID
 
-It's all. Go to **Actions > Update Gist** and **Run workflow**. Gist should update and show your WakaTime stats.
+It's all. Go to **Actions** > **Update Gist** and **Run workflow**. Gist should update and show your WakaTime stats.
 Next, statistics will be updated automatically every day. Pin this gist on your profile!
 
 > Inspired from [matchai/waka-box](https://github.com/matchai/waka-box) and
