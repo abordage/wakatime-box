@@ -42,6 +42,7 @@ title = title + ' statistics [update ' + updateDate + ']';
     summaryTable.push(['Statistics received', '✔']);
   } else {
     core.setFailed('Action failed with error: empty response from wakatime.com');
+    return;
   }
 
   /**
