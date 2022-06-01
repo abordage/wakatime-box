@@ -38,7 +38,7 @@ title = title + ' statistics [update ' + updateDate + ']';
 
   // @ts-ignore
   const languages: any[] = response.result.data.languages;
-  if (!languages) {
+  if (languages) {
     summaryTable.push(['Statistics received', '✔']);
   } else {
     core.setFailed('Action failed with error: empty response from wakatime.com');
@@ -64,6 +64,7 @@ title = title + ' statistics [update ' + updateDate + ']';
   }, []);
 
   lines.push(formatLine('Other lang', otherTotalSeconds, otherPercent));
+  lines.length = 0;
   if (lines.length === 0) return core.notice('No statistics for the last time period. Gist not updated');
 
   /**
