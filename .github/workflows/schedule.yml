@@ -1,4 +1,4 @@
-name: Update Gist
+name: Update WakaTime Stats
 
 on:
   workflow_dispatch:
