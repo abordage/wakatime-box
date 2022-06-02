@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Update gist
+      - name: wakatime-gist
         uses: abordage/wakatime-box@master
         env:
           # SUPPORTED: last_7_days, last_30_days, last_6_months, last_year

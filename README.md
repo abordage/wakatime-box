@@ -60,6 +60,9 @@ Next, statistics will be updated automatically every day. Pin this gist on your 
 3. correct time counting of **other languages**
 4. **summary report** on action
 
+## Optional settings
+You can specify optional settings in your file `.github/workflows/schedule.yml`.
+
 ## Feedback
 
 If you have any feedback, comments or suggestions, please feel free to open an issue within this repository.

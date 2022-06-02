@@ -13,8 +13,10 @@ const GIST_ID = core.getInput('GIST_ID', {required: true});
 const MAX_RESULT = Number(core.getInput('MAX_RESULT', {required: true}));
 const DATE_RANGE = core.getInput('DATE_RANGE', {required: false});
 const PRINT_SUMMARY = core.getBooleanInput('PRINT_SUMMARY', {required: true});
-const USER_AGENT = 'WakaTime-Gist/1.3 +https://github.com/marketplace/actions/wakatime-gist';
-const ACTION_URL = 'https://github.com/marketplace/actions/wakatime-gist';
+
+const USER_AGENT = core.getInput('USER_AGENT', {required: false});
+const ACTION_URL = core.getInput('ACTION_URL', {required: false});
+const ACTION_NAME = core.getInput('ACTION_NAME', {required: false});
 
 const updateDate = new Date().toLocaleDateString('en-us', {day: 'numeric', year: 'numeric', month: 'short'});
 const summaryTable: any[] = [[{data: 'Action', header: true}, {data: 'Result', header: true}]];
@@ -31,7 +33,7 @@ title = 'My ' + title + ' stack [update ' + updateDate + ']';
   /**
    * Get statistics
    */
-  const httpClient = new HttpClient(USER_AGENT);
+  const httpClient = new HttpClient(USER_AGENT + '+' + ACTION_URL);
   const response = await httpClient.getJson('https://wakatime.com/api/v1/users/current/stats/' + range,
     {Authorization: `Basic ${Buffer.from(WAKA_API_KEY).toString('base64')}`})
     .catch(error => core.setFailed('Action failed: ' + error.message));
@@ -105,7 +107,7 @@ title = 'My ' + title + ' stack [update ' + updateDate + ']';
     .addHeading('Results')
     .addTable(summaryTable)
     .addBreak()
-    .addLink('wakatime-gist', ACTION_URL);
+    .addLink(ACTION_NAME, ACTION_URL);
 
   if (PRINT_SUMMARY) {
     await summary.write();

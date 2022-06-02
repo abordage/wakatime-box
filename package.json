@@ -3,7 +3,7 @@
   "version": "1.3.0",
   "description": "Show your WakaTime statistics in a pinned gist for your GitHub profile",
   "scripts": {
-    "build": "tsc src/index.ts --outDir dist && ncc build dist/index.js --minify",
+    "build": "rimraf dist/ && tsc src/index.ts --outDir dist && ncc build dist/index.js --minify",
     "lint": "eslint src/ --ext .ts --fix"
   },
   "keywords": [
