@@ -2,6 +2,10 @@
 
 All notable changes to `wakatime-box` will be documented in this file.
 
+## 1.3.3 - 2022-06-02
+
+**Full Changelog**: https://github.com/abordage/wakatime-box/compare/1.3.2...1.3.3
+
 ## 1.3.2 - 2022-06-01
 
 **Full Changelog**: https://github.com/abordage/wakatime-box/compare/1.3.1...1.3.2
