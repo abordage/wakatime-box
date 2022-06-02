@@ -18,15 +18,6 @@ inputs:
   INPUT_PRINT_SUMMARY:
     default: true
 
-  INPUT_ACTION_NAME:
-    default: 'wakatime-gist'
-
-  INPUT_ACTION_URL:
-    default: 'https://github.com/marketplace/actions/wakatime-gist'
-
-  INPUT_USER_AGENT:
-    default: 'WakaTime-Gist/1.3'
-
 runs:
   using: "node16"
   main: "dist/index.js"
