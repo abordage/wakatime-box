@@ -22,10 +22,10 @@ const summaryTable: any[] = [[{data: 'Action', header: true}, {data: 'Result', h
 let range: string = DATE_RANGE;
 if (!['last_7_days', 'last_30_days', 'last_6_months', 'last_year'].includes(range)) range = 'last_7_days';
 
-let title: string = 'Latest';
-if (range === 'last_7_days') title = 'Weekly';
-if (range === 'last_30_days') title = 'Monthly';
-title = title + ' statistics [update ' + updateDate + ']';
+let title: string = 'latest';
+if (range === 'last_7_days') title = 'weekly';
+if (range === 'last_30_days') title = 'monthly';
+title = 'My ' + title + ' stack [update ' + updateDate + ']';
 
 (async () => {
   /**
