@@ -47,7 +47,7 @@ Automatically update your pinned gist with weekly (monthly, yearly) WakaTime sta
     - `WAKA_API_KEY`: API key for your WakaTime account
     - `GIST_ID`: your Gist ID
 
-It's all. Go to **Actions** > **Update Gist** and **Run workflow**. Gist should update and show your WakaTime stats.
+It's all. Go to **Actions** > **WakaTime Stats** and **Run workflow**. Gist should update and show your WakaTime stats.
 Next, statistics will be updated automatically every day. Pin this gist on your profile!
 
 > Inspired from [matchai/waka-box](https://github.com/matchai/waka-box) and
