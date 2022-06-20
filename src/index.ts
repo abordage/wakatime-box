@@ -62,7 +62,7 @@ title = 'My ' + title + ' stack [update ' + updateDate + ']';
     return [...prev, line];
   }, []);
 
-  lines.push(formatLine('Other lang', otherTotalSeconds, otherPercent));
+  lines.push(formatLine('Other', otherTotalSeconds, otherPercent));
   if (lines.length === 0) {
     core.notice('No statistics for the last time period. Gist not updated');
     return;
