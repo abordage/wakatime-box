@@ -2,6 +2,18 @@
 
 All notable changes to `wakatime-box` will be documented in this file.
 
+## 1.3.5 - 2022-06-20
+
+### What's Changed
+
+- Bump peter-evans/create-issue-from-file from 3 to 4 by @dependabot in https://github.com/abordage/wakatime-box/pull/1
+
+### New Contributors
+
+- @dependabot made their first contribution in https://github.com/abordage/wakatime-box/pull/1
+
+**Full Changelog**: https://github.com/abordage/wakatime-box/compare/1.3.4...1.3.5
+
 ## 1.3.4 - 2022-06-02
 
 **Full Changelog**: https://github.com/abordage/wakatime-box/compare/1.3.3...1.3.4
