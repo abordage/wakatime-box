@@ -48,16 +48,17 @@ title = 'My ' + title + ' stack [update ' + updateDate + ']';
    */
   let otherTotalSeconds = 0;
   let otherPercent = 0;
+  const otherLang = ['Other', 'Log', 'JSON', 'Text', 'GitIgnore file', 'GitIgnore file', '.env file'];
   const lines = languages.reduce((prev: any[], cur: any) => {
     const {name, percent, total_seconds} = cur;
-    const line = formatLine(name, total_seconds, percent);
 
-    if (name == 'Other' || prev.length >= MAX_RESULT - 1) {
+    if (otherLang.indexOf(name) !== -1 || prev.length >= MAX_RESULT - 1) {
       otherTotalSeconds += total_seconds;
       otherPercent += percent;
       return prev;
     }
 
+    const line = formatLine(name, total_seconds, percent);
     return [...prev, line];
   }, []);
 

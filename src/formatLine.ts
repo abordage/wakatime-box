@@ -1,6 +1,6 @@
 export default function formatLine(name: string, total_seconds: number, percent: number) {
   return [
-    cutStr(name, 10).padEnd(12),
+    cutStr(formatName(name), 10).padEnd(12),
     convertSeconds(total_seconds).padEnd(11),
     generateBarChart(percent, 21),
     String(percent.toFixed(1)).padStart(5) + '%',
@@ -32,6 +32,13 @@ function convertSeconds(seconds: number) {
 
 function cutStr(str: string, len: number) {
   return str.length > len ? str.substring(0, len - 3) + '...' : str;
+}
+
+function formatName(name: string) {
+  if (name === 'Blade Template') {
+    return 'Blade';
+  }
+  return name;
 }
 
 function generateBarChart(percent: number, size: number) {
