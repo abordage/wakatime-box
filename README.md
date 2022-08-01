@@ -5,7 +5,7 @@ Automatically update your pinned gist with weekly (monthly, yearly) WakaTime sta
 <p style="text-align: center;" align="center">
 <a href="https://github.com/abordage" title="WakaTime Statistics Gist">
     <img alt="WakaTime Statistics Gist" 
-         src="https://github.com/abordage/wakatime-box/blob/master/docs/images/example-830-rounded.png">
+         src="https://github.com/abordage/wakatime-box/blob/master/docs/images/example-830-rounded.png?raw=true">
 </a>
 </p>
 
