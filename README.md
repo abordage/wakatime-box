@@ -46,6 +46,8 @@ Automatically update your pinned gist with weekly (monthly, yearly) WakaTime sta
     - `GH_TOKEN`: GitHub token generated earlier
     - `WAKA_API_KEY`: API key for your WakaTime account
     - `GIST_ID`: your Gist ID
+    - (Optional) `WAKATIME_BASE_URL`: If you are using a WakaTime-compatible backend (e.g. Wakapi), set this to the corresponding base URL.
+
 
 It's all. Go to **Actions** > **WakaTime Stats** and **Run workflow**. Gist should update and show your WakaTime stats.
 Next, statistics will be updated automatically every day. Pin this gist on your profile!
