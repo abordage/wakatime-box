@@ -2,6 +2,27 @@
 
 All notable changes to `wakatime-box` will be documented in this file.
 
+## 1.4.0 - 2023-02-21
+
+### What's Changed
+
+- Feat: Add support for custom backend base URL. by @rakino in https://github.com/abordage/wakatime-box/pull/13
+- Update lychee-action config by @abordage in https://github.com/abordage/wakatime-box/pull/5
+- Bump dependabot/fetch-metadata from 1.3.1 to 1.3.3 by @dependabot in https://github.com/abordage/wakatime-box/pull/2
+- Bump lycheeverse/lychee-action from 1.5.0 to 1.5.1 by @dependabot in https://github.com/abordage/wakatime-box/pull/3
+- Bump @actions/core from 1.9.0 to 1.9.1 by @dependabot in https://github.com/abordage/wakatime-box/pull/6
+- Bump dependabot/fetch-metadata from 1.3.3 to 1.3.4 by @dependabot in https://github.com/abordage/wakatime-box/pull/7
+- Bump dependabot/fetch-metadata from 1.3.4 to 1.3.5 by @dependabot in https://github.com/abordage/wakatime-box/pull/8
+- Bump lycheeverse/lychee-action from 1.5.1 to 1.5.4 by @dependabot in https://github.com/abordage/wakatime-box/pull/10
+- Bump json5 from 1.0.1 to 1.0.2 by @dependabot in https://github.com/abordage/wakatime-box/pull/11
+- Bump dependabot/fetch-metadata from 1.3.5 to 1.3.6 by @dependabot in https://github.com/abordage/wakatime-box/pull/12
+
+### New Contributors
+
+- @rakino made their first contribution in https://github.com/abordage/wakatime-box/pull/13
+
+**Full Changelog**: https://github.com/abordage/wakatime-box/compare/1.3.5...1.4.0
+
 ## 1.3.5 - 2022-06-20
 
 ### What's Changed
