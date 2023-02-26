@@ -14,25 +14,25 @@
   "author": "Pavel Bychko <abordage.dev@gmail.com> (https://abordage.dev)",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.9.1",
-    "@actions/github": "^5.0.3",
+    "@actions/core": "^1.10.0",
+    "@actions/github": "^5.1.1",
     "@actions/http-client": "^2.0.1",
-    "@octokit/rest": "^18.12.0",
-    "dotenv": "^16.0.1"
+    "@octokit/rest": "^19.0.7",
+    "dotenv": "^16.0.3"
   },
   "devDependencies": {
-    "@types/node": "^17.0.36",
+    "@types/node": "^18.14.1",
     "@types/node-fetch": "^2.6.1",
-    "@typescript-eslint/eslint-plugin": "^5.26.0",
-    "@typescript-eslint/parser": "^5.26.0",
-    "@vercel/ncc": "^0.34.0",
-    "eslint": "^8.16.0",
+    "@typescript-eslint/eslint-plugin": "^5.53.0",
+    "@typescript-eslint/parser": "^5.53.0",
+    "@vercel/ncc": "^0.36.1",
+    "eslint": "^8.35.0",
     "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.2.0",
-    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.6.1",
+    "eslint-plugin-promise": "^6.1.1",
     "ts-node": "^10.8.0",
-    "tslib": "^2.4.0",
-    "typescript": "^4.7.2"
+    "tslib": "^2.5.0",
+    "typescript": "^4.9.5"
   }
 }
