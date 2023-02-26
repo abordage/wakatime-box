@@ -2,6 +2,14 @@
 
 All notable changes to `wakatime-box` will be documented in this file.
 
+## 2.0.0 - 2023-02-26
+
+### What's Changed
+
+- Add new formatting by @abordage in https://github.com/abordage/wakatime-box/pull/14
+
+**Full Changelog**: https://github.com/abordage/wakatime-box/compare/1.4.0...2.0.0
+
 ## 1.4.0 - 2023-02-21
 
 ### What's Changed
