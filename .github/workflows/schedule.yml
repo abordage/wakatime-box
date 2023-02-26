@@ -20,6 +20,7 @@ jobs:
           INPUT_MAX_RESULT: 5
           #
           INPUT_PRINT_SUMMARY: true
+          INPUT_USE_OLD_FORMAT: false
 
           INPUT_GH_TOKEN: ${{ secrets.GH_TOKEN }}
           INPUT_WAKA_API_KEY: ${{ secrets.WAKA_API_KEY }}
