@@ -14,6 +14,7 @@ const GIST_ID = core.getInput('GIST_ID', {required: true});
 const MAX_RESULT = Number(core.getInput('MAX_RESULT', {required: true}));
 const DATE_RANGE = core.getInput('DATE_RANGE', {required: false});
 const PRINT_SUMMARY = core.getBooleanInput('PRINT_SUMMARY', {required: true});
+const USE_OLD_FORMAT = core.getBooleanInput('USE_OLD_FORMAT', {required: false});
 
 const updateDate = new Date().toLocaleDateString('en-us', {day: 'numeric', year: 'numeric', month: 'short'});
 const summaryTable: any[] = [[{data: 'Action', header: true}, {data: 'Result', header: true}]];
@@ -30,9 +31,7 @@ if (range === 'last_30_days') title = 'monthly';
 title = 'My ' + title + ' stack [update ' + updateDate + ']';
 
 (async () => {
-  /**
-   * Get statistics
-   */
+  /** Get statistics */
   const httpClient = new HttpClient( 'WakaTime-Gist/1.3 +https://github.com/marketplace/actions/wakatime-gist');
   const response = await httpClient.getJson(wakatimeBaseURL + '/users/current/stats/' + range,
     {Authorization: `Basic ${Buffer.from(WAKA_API_KEY).toString('base64')}`})
@@ -47,9 +46,7 @@ title = 'My ' + title + ' stack [update ' + updateDate + ']';
     return;
   }
 
-  /**
-   * Formatting
-   */
+  /** Formatting */
   let otherTotalSeconds = 0;
   let otherPercent = 0;
   const otherLang = ['Other', 'Log', 'JSON', 'Text', 'GitIgnore file', 'GitIgnore file', '.env file'];
@@ -62,19 +59,17 @@ title = 'My ' + title + ' stack [update ' + updateDate + ']';
       return prev;
     }
 
-    const line = formatLine(name, total_seconds, percent);
+    const line = formatLine(name, total_seconds, percent, USE_OLD_FORMAT);
     return [...prev, line];
   }, []);
 
-  lines.push(formatLine('Other', otherTotalSeconds, otherPercent));
+  lines.push(formatLine('Other', otherTotalSeconds, otherPercent, USE_OLD_FORMAT));
   if (lines.length === 0) {
     core.notice('No statistics for the last time period. Gist not updated');
     return;
   }
 
-  /**
-   * Get gist filename
-   */
+  /** Get gist filename */
   const octokit = new Octokit({auth: GH_TOKEN});
   const gist = await octokit.gists.get({gist_id: GIST_ID})
     .catch(error => core.setFailed('Action failed: Gist ' + error.message));
@@ -86,9 +81,7 @@ title = 'My ' + title + ' stack [update ' + updateDate + ']';
     return;
   }
 
-  /**
-   * Update gist
-   */
+  /** Update gist */
   await octokit.gists.update({
     gist_id: GIST_ID,
     files: {
@@ -101,14 +94,12 @@ title = 'My ' + title + ' stack [update ' + updateDate + ']';
 
   summaryTable.push(['Gist updated', '✔']);
 
-  /**
-   * Print summary
-   */
+  /** Print summary */
   const summary = core.summary
     .addHeading('Results')
     .addTable(summaryTable)
     .addBreak()
-    .addLink('WakaTime-Gist/1.3', 'https://github.com/marketplace/actions/wakatime-gist');
+    .addLink('WakaTime-Gist/2.0', 'https://github.com/marketplace/actions/wakatime-gist');
 
   if (PRINT_SUMMARY) {
     await summary.write();
