@@ -4,7 +4,7 @@ export default function formatLine(name: string, total_seconds: number, percent:
     return [
       cutStr(formatName(name), 10).padEnd(12),
       '🕓 ' + convertSeconds(total_seconds).padEnd(9),
-      generateBarChart(percent, 24),
+      generateBarChart(percent, 23),
       String(percent.toFixed(1)).padStart(5) + '%',
     ].join(' ');
   }
@@ -13,7 +13,7 @@ export default function formatLine(name: string, total_seconds: number, percent:
     cutStr(formatName(name), 10).padEnd(15, '.'),
     (convertSeconds(total_seconds) + ' ').padEnd(8, '.'),
 
-  ].join(' ') + String(percent.toFixed(1)).padStart(33, '.') + '%';
+  ].join(' ') + String(percent.toFixed(1)).padStart(32, '.') + '%';
 }
 
 function convertSeconds(seconds: number) {
