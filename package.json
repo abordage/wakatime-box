@@ -4,7 +4,8 @@
   "description": "Show your WakaTime statistics in a pinned gist for your GitHub profile",
   "scripts": {
     "build": "rimraf dist/ && tsc src/index.ts --outDir dist && ncc build dist/index.js --minify",
-    "lint": "eslint src/ --ext .ts --fix"
+    "lint": "eslint src/ --ext .ts --fix",
+    "run-local": "npm run build && node dist/index.js"
   },
   "keywords": [
     "wakatime",
