@@ -2,6 +2,14 @@
 
 All notable changes to `wakatime-box` will be documented in this file.
 
+## 2.0.1 - 2023-02-27
+
+### What's Changed
+
+- Update Other languages list by @abordage in https://github.com/abordage/wakatime-box/pull/15
+
+**Full Changelog**: https://github.com/abordage/wakatime-box/compare/2.0.0...2.0.1
+
 ## 2.0.0 - 2023-02-26
 
 ### What's Changed
