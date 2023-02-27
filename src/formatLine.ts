@@ -3,7 +3,7 @@ export default function formatLine(name: string, total_seconds: number, percent:
   if (use_old_format) {
     return [
       cutStr(formatName(name), 10).padEnd(12),
-      convertSeconds(total_seconds, true).padEnd(11),
+      '🕓 ' + convertSeconds(total_seconds).padEnd(9),
       generateBarChart(percent, 24),
       String(percent.toFixed(1)).padStart(5) + '%',
     ].join(' ');
@@ -11,12 +11,12 @@ export default function formatLine(name: string, total_seconds: number, percent:
 
   return [
     cutStr(formatName(name), 10).padEnd(15, '.'),
-    (convertSeconds(total_seconds, false) + ' ').padEnd(8, '.'),
+    (convertSeconds(total_seconds) + ' ').padEnd(8, '.'),
 
   ].join(' ') + String(percent.toFixed(1)).padStart(33, '.') + '%';
 }
 
-function convertSeconds(seconds: number, with_icon: boolean) {
+function convertSeconds(seconds: number) {
   const days = Math.floor(seconds / (24 * 60 * 60));
   seconds -= days * (24 * 60 * 60);
   const hours = Math.floor(seconds / (60 * 60));
@@ -25,7 +25,7 @@ function convertSeconds(seconds: number, with_icon: boolean) {
   seconds -= minutes * (60);
 
   seconds = Math.round(seconds);
-  const result = with_icon ? '🕓 ' : '';
+  const result = '';
 
   if (days > 0) {
     return result + days + 'd ' + hours + 'h';

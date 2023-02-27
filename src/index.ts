@@ -49,7 +49,7 @@ title = 'My ' + title + ' stack [update ' + updateDate + ']';
   /** Formatting */
   let otherTotalSeconds = 0;
   let otherPercent = 0;
-  const otherLang = ['Other', 'Log', 'JSON', 'Text', 'GitIgnore file', 'GitIgnore file', '.env file'];
+  const otherLang = ['Other', 'AUTO_DETECTED', 'unknown', 'Log', 'Text', 'GitIgnore file', '.env file'];
   const lines = languages.reduce((prev: any[], cur: any) => {
     const {name, percent, total_seconds} = cur;
 
