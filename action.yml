@@ -19,7 +19,7 @@ inputs:
     default: true
 
 runs:
-  using: "node16"
+  using: "node22"
   main: "dist/index.js"
 
 branding:
