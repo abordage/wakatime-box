@@ -2,6 +2,30 @@
 
 All notable changes to `wakatime-box` will be documented in this file.
 
+## 2.1.0 - 2024-11-27
+
+### What's Changed
+
+* Bump lycheeverse/lychee-action from 1.5.4 to 1.6.1 by @dependabot in https://github.com/abordage/wakatime-box/pull/16
+* Bump dependabot/fetch-metadata from 1.3.6 to 1.4.0 by @dependabot in https://github.com/abordage/wakatime-box/pull/17
+* Bump lycheeverse/lychee-action from 1.6.1 to 1.7.0 by @dependabot in https://github.com/abordage/wakatime-box/pull/18
+* Bump lycheeverse/lychee-action from 1.7.0 to 1.8.0 by @dependabot in https://github.com/abordage/wakatime-box/pull/19
+* Bump dependabot/fetch-metadata from 1.4.0 to 1.5.1 by @dependabot in https://github.com/abordage/wakatime-box/pull/20
+* Bump dependabot/fetch-metadata from 1.5.1 to 1.6.0 by @dependabot in https://github.com/abordage/wakatime-box/pull/21
+* Bump actions/checkout from 3 to 4 by @dependabot in https://github.com/abordage/wakatime-box/pull/22
+* Bump stefanzweifel/git-auto-commit-action from 4 to 5 by @dependabot in https://github.com/abordage/wakatime-box/pull/23
+* Bump lycheeverse/lychee-action from 1.8.0 to 1.9.2 by @dependabot in https://github.com/abordage/wakatime-box/pull/26
+* Bump github/codeql-action from 2 to 3 by @dependabot in https://github.com/abordage/wakatime-box/pull/25
+* Bump peter-evans/create-issue-from-file from 4 to 5 by @dependabot in https://github.com/abordage/wakatime-box/pull/24
+* Bump lycheeverse/lychee-action from 1.9.2 to 1.9.3 by @dependabot in https://github.com/abordage/wakatime-box/pull/27
+* Bump dependabot/fetch-metadata from 1.6.0 to 2.0.0 by @dependabot in https://github.com/abordage/wakatime-box/pull/28
+* Bump dependabot/fetch-metadata from 2.0.0 to 2.1.0 by @dependabot in https://github.com/abordage/wakatime-box/pull/30
+* Bump lycheeverse/lychee-action from 1.9.3 to 1.10.0 by @dependabot in https://github.com/abordage/wakatime-box/pull/29
+* Bump dependabot/fetch-metadata from 2.1.0 to 2.2.0 by @dependabot in https://github.com/abordage/wakatime-box/pull/31
+* Bump braces from 3.0.2 to 3.0.3 by @dependabot in https://github.com/abordage/wakatime-box/pull/32
+
+**Full Changelog**: https://github.com/abordage/wakatime-box/compare/2.0.1...2.1.0
+
 ## 2.0.1 - 2023-02-27
 
 ### What's Changed
