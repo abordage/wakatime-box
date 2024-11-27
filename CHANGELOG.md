@@ -2,6 +2,14 @@
 
 All notable changes to `wakatime-box` will be documented in this file.
 
+## 2.1.1 - 2024-11-27
+
+### What's Changed
+
+* Bump lycheeverse/lychee-action from 1.10.0 to 2.1.0 by @dependabot in https://github.com/abordage/wakatime-box/pull/34
+
+**Full Changelog**: https://github.com/abordage/wakatime-box/compare/2.1.0...2.1.1
+
 ## 2.1.0 - 2024-11-27
 
 ### What's Changed
