@@ -13,7 +13,7 @@ export default function formatLine(name: string, total_seconds: number, percent:
     cutStr(formatName(name), 10).padEnd(15, '.'),
     (convertSeconds(total_seconds) + ' ').padEnd(8, '.'),
 
-  ].join(' ') + String(percent.toFixed(1)).padStart(32, '.') + '%';
+  ].join(' ') + String(percent.toFixed(1)).padStart(28, '.') + '%';
 }
 
 function convertSeconds(seconds: number) {
