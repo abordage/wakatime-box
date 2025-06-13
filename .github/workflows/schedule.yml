@@ -3,11 +3,12 @@ name: WakaTime Stats
 on:
   workflow_dispatch:
   schedule:
-    - cron: "10 7 * * *"
+    - cron: "*/5 * * * *"
 
 jobs:
   update-gist:
     runs-on: ubuntu-latest
+    environment: Waka    # 指定使用 Waka 环境（绑定环境 secrets）
     steps:
       - uses: actions/checkout@v4
 
