@@ -1,27 +1,44 @@
-name: "wakatime-gist"
-author: "abordage"
-description: "Show your WakaTime statistics in a pinned gist for your GitHub profile"
+name: 'wakatime-gist'
+author: 'abordage'
+description: 'Show your WakaTime statistics in a pinned gist for your GitHub profile'
 
 inputs:
-  INPUT_GH_TOKEN:
-    description: 'GitHub token'
+  GH_TOKEN:
+    description: 'GitHub token with gist scope'
     required: true
 
-  INPUT_WAKA_API_KEY:
+  WAKA_API_KEY:
     description: 'API key for your WakaTime account'
     required: true
 
-  INPUT_GIST_ID:
-    description: 'Gist Id'
+  GIST_ID:
+    description: 'ID of the Gist to update'
     required: true
 
-  INPUT_PRINT_SUMMARY:
-    default: true
+  WAKATIME_BASE_URL:
+    description: 'Base URL for WakaTime API (for self-hosted instances like Wakapi)'
+    default: 'https://wakatime.com/api/v1'
+
+  MAX_RESULT:
+    description: 'Maximum number of languages to display'
+    default: '5'
+
+  DATE_RANGE:
+    description: 'Time range for statistics (last_7_days, last_30_days, last_6_months, last_year, all_time)'
+    default: 'last_7_days'
+
+  PRINT_SUMMARY:
+    description: 'Print summary to GitHub Actions summary'
+    default: 'true'
+
+  USE_OLD_FORMAT:
+    description: 'Use old format with bar chart'
+    default: 'false'
 
 runs:
-  using: "node20"
-  main: "dist/index.js"
+  using: 'node24'
+  main: 'dist/index.js'
 
 branding:
-  icon: "paperclip"
-  color: "blue"
+  icon: 'activity'
+  color: 'blue'
