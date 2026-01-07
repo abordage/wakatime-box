@@ -114,9 +114,6 @@ Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
 - Pavel Bychko ([abordage](https://github.com/abordage))
 - [All Contributors](https://github.com/abordage/wakatime-box/graphs/contributors)
 
-> Inspired by [matchai/waka-box](https://github.com/matchai/waka-box) and
-> other [awesome pinned-gist projects](https://github.com/matchai/awesome-pinned-gists)
-
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
