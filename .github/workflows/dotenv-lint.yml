@@ -1,0 +1,38 @@
+name: Environment Files Lint
+
+on:
+  push:
+    paths:
+      - '**/.env*'
+      - '.env*'
+  pull_request:
+    paths:
+      - '**/.env*'
+      - '.env*'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  dotenv-lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    name: Environment Files Analysis
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Run dotenv-linter
+        uses: dotenv-linter/action-dotenv-linter@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-check
+          dotenv_linter_flags: --skip UnorderedKey
+          fail_on_error: false
+

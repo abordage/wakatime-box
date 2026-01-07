@@ -3,26 +3,28 @@ name: WakaTime Stats
 on:
   workflow_dispatch:
   schedule:
-    - cron: "10 7 * * *"
+    - cron: '10 3 * * *'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
-  update-gist:
+  update-wakatime-gist:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v6
 
-      - name: wakatime-gist
-        uses: abordage/wakatime-box@master
-        env:
-          # SUPPORTED: last_7_days, last_30_days, last_6_months, last_year
-          INPUT_DATE_RANGE: last_7_days
-          # NUMBER OF LANGUAGES DISPLAYED
-          INPUT_MAX_RESULT: 5
-          #
-          INPUT_PRINT_SUMMARY: true
-          INPUT_USE_OLD_FORMAT: false
-
-          INPUT_GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          INPUT_WAKA_API_KEY: ${{ secrets.WAKA_API_KEY }}
-          INPUT_GIST_ID: ${{ secrets.GIST_ID }}
-          INPUT_WAKATIME_BASE_URL: ${{ secrets.WAKATIME_BASE_URL }}
+      - name: WakaTime Box
+        uses: abordage/wakatime-box@main
+        with:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GIST_ID: ${{ secrets.GIST_ID }}
+          WAKA_API_KEY: ${{ secrets.WAKA_API_KEY }}
+          PRINT_SUMMARY: 'true'
