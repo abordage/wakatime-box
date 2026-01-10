@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@actions/core": "^2.0.1",
-    "@actions/http-client": "^3.0.0",
+    "@actions/http-client": "^3.0.1",
     "@octokit/rest": "^22.0.1"
   },
   "devDependencies": {
