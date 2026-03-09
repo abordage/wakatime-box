@@ -31,19 +31,19 @@
     "url": "git+https://github.com/abordage/wakatime-box.git"
   },
   "dependencies": {
-    "@actions/core": "^2.0.2",
-    "@actions/http-client": "^3.0.1",
+    "@actions/core": "^3.0.0",
+    "@actions/http-client": "^4.0.0",
     "@octokit/rest": "^22.0.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.2",
+    "@eslint/js": "^10.0.0",
     "@rollup/plugin-commonjs": "^29.0.0",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-typescript": "^12.3.0",
     "@types/node": "^25.2.2",
     "dotenv": "^17.3.1",
-    "eslint": "^9.39.2",
+    "eslint": "^10.0.0",
     "rimraf": "^6.1.2",
     "rollup": "^4.59.0",
     "tslib": "^2.8.1",
