@@ -34,5 +34,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-check
           dotenv_linter_flags: --skip UnorderedKey
-          fail_on_error: false
-
