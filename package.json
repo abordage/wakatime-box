@@ -31,7 +31,7 @@
     "url": "git+https://github.com/abordage/wakatime-box.git"
   },
   "dependencies": {
-    "@actions/core": "^3.0.0",
+    "@actions/core": "^3.0.1",
     "@actions/http-client": "^4.0.0",
     "@octokit/rest": "^22.0.1"
   },
