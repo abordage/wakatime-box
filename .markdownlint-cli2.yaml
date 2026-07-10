@@ -1,0 +1,6 @@
+config:
+  MD013: false  # Line length
+  MD032: false  # Blanks around lists
+  MD033: false  # Inline HTML
+  MD041: false  # First line heading
+

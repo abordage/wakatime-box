@@ -12,8 +12,8 @@ body:
           required: true
   - type: input
     attributes:
-      label: What version of lighthouse-box are you using?
-      description: 'For example: 1.0.3'
+      label: What version of wakatime-box are you using?
+      description: 'For example: 3.0.0'
     validations:
       required: true
   - type: textarea

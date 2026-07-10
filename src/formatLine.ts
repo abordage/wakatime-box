@@ -1,97 +1,107 @@
-const CONSTANTS = {
-  ICONS: {
-    TIME: '🕓',
-  },
-  NAME_LENGTHS: {
-    OLD: 12,
-    NEW: 15,
-  },
-  PADDING_LENGTHS: {
-    NEW_1: 8,
-    NEW_2: 28,
-  },
-  SYMBOLS: {
-    PERCENT: '%',
-    DOT: '.',
-    ELLIPSIS: '...',
-    BAR: '░▏▎▍▌▋▊▉█',
-  },
-  BAR_CHART_SIZE: 23,
+const TIME = {
+  SECONDS_IN_DAY: 24 * 60 * 60,
+  SECONDS_IN_HOUR: 60 * 60,
+  SECONDS_IN_MINUTE: 60,
+} as const;
+
+const BAR_CHART = {
+  SIZE: 23,
   FRACTION_UNIT: 8,
-  SECONDS_IN: {
-    DAY: 24 * 60 * 60,
-    HOUR: 60 * 60,
-    MINUTE: 60,
-  },
-};
+  EMPTY: '\u2591',
+  FULL: '\u2588',
+  CHARS: '\u2591\u258F\u258E\u258D\u258C\u258B\u258A\u2589\u2588',
+} as const;
 
-export default function formatLine(name: string, totalSeconds: number, percent: number, useOldFormat: boolean) {
-  const displayName = truncateString(name, 10);
-  const formattedSeconds = formatTime(totalSeconds);
-  const formattedPercent = percent.toFixed(1).toString();
+const FORMAT = {
+  NAME_LENGTH_OLD: 12,
+  NAME_LENGTH_NEW: 15,
+  NAME_TRUNCATE_LENGTH: 10,
+  TIME_PADDING: 9,
+  TIME_PADDING_NEW: 8,
+  PERCENT_PADDING: 5,
+  PERCENT_PADDING_NEW: 28,
+  TIME_ICON: '\uD83D\uDD53',
+  ELLIPSIS: '...',
+  DOT: '.',
+} as const;
+
+export function formatLine(
+  name: string,
+  totalSeconds: number,
+  percent: number,
+  useOldFormat: boolean
+): string {
+  const displayName = truncateString(name, FORMAT.NAME_TRUNCATE_LENGTH);
+  const formattedTime = formatTime(totalSeconds);
+  const formattedPercent = percent.toFixed(1);
+
   return useOldFormat
-    ? formatOldLine(displayName, formattedSeconds, formattedPercent, percent)
-    : formatNewLine(displayName, formattedSeconds, formattedPercent);
-}
-
-function buildTimeString(majorUnit: number, majorLabel: string, seconds: number, majorUnitSeconds: number, minorLabel: string, minorUnitSeconds?: number): string {
-  return minorUnitSeconds !== undefined
-    ? `${majorUnit}${majorLabel} ${Math.floor((seconds % majorUnitSeconds) / minorUnitSeconds)}${minorLabel}`
-    : `${majorUnit}${majorLabel}`;
+    ? formatOldLine(displayName, formattedTime, formattedPercent, percent)
+    : formatNewLine(displayName, formattedTime, formattedPercent);
 }
 
 function formatTime(seconds: number): string {
-  const {DAY, HOUR, MINUTE} = CONSTANTS.SECONDS_IN;
-  const days = Math.floor(seconds / DAY);
-  if (days > 0) return buildTimeString(days, 'd', seconds, DAY, 'h', HOUR);
-  const hours = Math.floor(seconds / HOUR);
-  if (hours > 0) return buildTimeString(hours, 'h', seconds, HOUR, 'm', MINUTE);
-  const minutes = Math.floor(seconds / MINUTE);
-  if (minutes > 0) return buildTimeString(minutes, 'm', seconds, MINUTE, 's');
+  const days = Math.floor(seconds / TIME.SECONDS_IN_DAY);
+  if (days > 0) {
+    const hours = Math.floor((seconds % TIME.SECONDS_IN_DAY) / TIME.SECONDS_IN_HOUR);
+    return `${days}d ${hours}h`;
+  }
+
+  const hours = Math.floor(seconds / TIME.SECONDS_IN_HOUR);
+  if (hours > 0) {
+    const minutes = Math.floor((seconds % TIME.SECONDS_IN_HOUR) / TIME.SECONDS_IN_MINUTE);
+    return `${hours}h ${minutes}m`;
+  }
+
+  const minutes = Math.floor(seconds / TIME.SECONDS_IN_MINUTE);
+  if (minutes > 0) {
+    const secs = Math.floor(seconds % TIME.SECONDS_IN_MINUTE);
+    return `${minutes}m ${secs}s`;
+  }
+
   return `${Math.round(seconds)}s`;
 }
 
-function truncateString(str: string, len: number): string {
-  const {ELLIPSIS} = CONSTANTS.SYMBOLS;
-  return str.length > len ? str.substring(0, len - ELLIPSIS.length) + ELLIPSIS : str;
+function truncateString(str: string, maxLength: number): string {
+  if (str.length <= maxLength) {
+    return str;
+  }
+  return str.substring(0, maxLength - FORMAT.ELLIPSIS.length) + FORMAT.ELLIPSIS;
 }
 
 function generateBarChart(percent: number): string {
-  const {BAR_CHART_SIZE, FRACTION_UNIT, SYMBOLS: {BAR}} = CONSTANTS;
-  const frac = Math.floor((BAR_CHART_SIZE * FRACTION_UNIT * percent) / 100);
-  const barsFull = Math.floor(frac / FRACTION_UNIT);
-  const semiBarIndex = frac % FRACTION_UNIT;
-  return barsFull >= BAR_CHART_SIZE
-    ? BAR[8].repeat(BAR_CHART_SIZE)
-    : BAR[8].repeat(barsFull) + BAR[semiBarIndex].padEnd(BAR_CHART_SIZE, BAR[0]);
+  const fraction = Math.floor((BAR_CHART.SIZE * BAR_CHART.FRACTION_UNIT * percent) / 100);
+  const fullBars = Math.floor(fraction / BAR_CHART.FRACTION_UNIT);
+  const semiBarIndex = fraction % BAR_CHART.FRACTION_UNIT;
+
+  if (fullBars >= BAR_CHART.SIZE) {
+    return BAR_CHART.FULL.repeat(BAR_CHART.SIZE);
+  }
+
+  const partialBar = BAR_CHART.CHARS[semiBarIndex];
+  const emptyBars = BAR_CHART.EMPTY.repeat(BAR_CHART.SIZE - fullBars - 1);
+
+  return BAR_CHART.FULL.repeat(fullBars) + partialBar + emptyBars;
 }
 
-function formatPercent(percent: string): string {
-  return percent.padStart(5) + CONSTANTS.SYMBOLS.PERCENT;
+function formatOldLine(
+  name: string,
+  time: string,
+  percent: string,
+  percentValue: number
+): string {
+  const paddedName = name.padEnd(FORMAT.NAME_LENGTH_OLD);
+  const timeWithIcon = `${FORMAT.TIME_ICON} ${time.padEnd(FORMAT.TIME_PADDING)}`;
+  const bar = generateBarChart(percentValue);
+  const paddedPercent = percent.padStart(FORMAT.PERCENT_PADDING) + '%';
+
+  return [paddedName, timeWithIcon, bar, paddedPercent].join(' ');
 }
 
-function formatTimeWithIcon(seconds: string): string {
-  return `${CONSTANTS.ICONS.TIME} ${seconds.padEnd(9)}`;
-}
+function formatNewLine(name: string, time: string, percent: string): string {
+  const paddedName = name.padEnd(FORMAT.NAME_LENGTH_NEW, FORMAT.DOT);
+  const paddedTime = (time + ' ').padEnd(FORMAT.TIME_PADDING_NEW, FORMAT.DOT);
+  const paddedPercent = percent.padStart(FORMAT.PERCENT_PADDING_NEW, FORMAT.DOT) + '%';
 
-function formatNewTimeDisplay(seconds: string): string {
-  return (seconds + ' ').padEnd(CONSTANTS.PADDING_LENGTHS.NEW_1, CONSTANTS.SYMBOLS.DOT);
-}
-
-function formatOldLine(name: string, seconds: string, percent: string, percentValue: number) {
-  return [
-    name.padEnd(CONSTANTS.NAME_LENGTHS.OLD),
-    formatTimeWithIcon(seconds),
-    generateBarChart(percentValue),
-    formatPercent(percent),
-  ].join(' ');
-}
-
-function formatNewLine(name: string, seconds: string, percent: string) {
-  return (
-    [
-      name.padEnd(CONSTANTS.NAME_LENGTHS.NEW, CONSTANTS.SYMBOLS.DOT),
-      formatNewTimeDisplay(seconds),
-    ].join(' ') + percent.padStart(CONSTANTS.PADDING_LENGTHS.NEW_2, CONSTANTS.SYMBOLS.DOT) + CONSTANTS.SYMBOLS.PERCENT
-  );
+  return paddedName + ' ' + paddedTime + paddedPercent;
 }
