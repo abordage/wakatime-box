@@ -152,7 +152,7 @@ Fill in required values:
 ```env
 GH_TOKEN=your_github_token
 GIST_ID=your_gist_id
-WAKA_API_KEY=your_wakatime_api_key
+WAKA_API_KEY=your_wakatime_oauth_token
 ```
 
 Run locally:

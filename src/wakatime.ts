@@ -1,4 +1,5 @@
 import { HttpClient } from '@actions/http-client';
+import { authorizationHeader } from './authorization.js';
 import type { DateRange, WakaTimeLanguage } from './types.js';
 
 const USER_AGENT = 'WakaTime-Gist/3.0 +https://github.com/marketplace/actions/wakatime-gist';
@@ -9,7 +10,7 @@ export async function fetchStatistics(
   apiKey: string
 ): Promise<WakaTimeLanguage[]> {
   const httpClient = new HttpClient(USER_AGENT);
-  const authHeader = `Basic ${Buffer.from(apiKey).toString('base64')}`;
+  const authHeader = authorizationHeader(apiKey);
 
   const response = await httpClient.getJson<{ data: { languages: WakaTimeLanguage[] } }>(
     `${baseUrl}/users/current/stats/${dateRange}`,
