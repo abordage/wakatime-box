@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/abordage/wakatime-box/compare/v3.0.0...v3.0.1) (2026-11-04)
+
+
+### Bug Fixes
+
+* **wakatime:** read stats with an OAuth token ([4c1f1cd](https://github.com/abordage/wakatime-box/commit/4c1f1cdbf5e1e4ad66ca0cd8e92e89cf52d7bd79))
+
 # [3.0.0](https://github.com/abordage/wakatime-box/compare/v2.1.1...v3.0.0) (2026-01-07)
 
 
