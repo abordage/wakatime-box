@@ -36,7 +36,8 @@ Automatically update your pinned gist with weekly (monthly, yearly) WakaTime sta
 1. [**Create**](https://wakatime.com/signup) WakaTime account (it's free)
 2. **Enable** `Display code time publicly` and `Display languages, editors...` in
    WakaTime [profile settings](https://wakatime.com/settings/profile)
-3. **Copy** WakaTime [API Key](https://wakatime.com/settings/api-key)
+3. **Copy** a personal [OAuth token](https://wakatime.com/oauth). A WakaTime API key can only send
+   plugin activity and cannot read stats. Wakapi still uses an API key in this same secret
 4. [**Create**](https://github.com/settings/tokens/new) a token in your GitHub account settings with the `gist scope`
    only and **copy** it
 5. [**Create**](https://gist.github.com) a new **public** Gist and copy ID from url (string after last slash)
@@ -44,7 +45,7 @@ Automatically update your pinned gist with weekly (monthly, yearly) WakaTime sta
 7. Go to **Settings** > **Secrets** > **Actions secrets** in **your fork**
 8. **Create** new **Environment secrets:**
     - `GH_TOKEN`: GitHub token generated earlier
-    - `WAKA_API_KEY`: API key for your WakaTime account
+    - `WAKA_API_KEY`: OAuth token for WakaTime, or an API key for Wakapi
     - `GIST_ID`: your Gist ID
 
 It's all. Go to **Actions** > **WakaTime Stats** and **Run workflow**. Gist should update and show your WakaTime stats.
@@ -54,7 +55,7 @@ Next, statistics will be updated automatically every day. Pin this gist on your 
 
 ```yaml
 - name: WakaTime Box
-  uses: abordage/wakatime-box@v3
+  uses: abordage/wakatime-box@v3.0.1
   with:
     GH_TOKEN: ${{ secrets.GH_TOKEN }}
     GIST_ID: ${{ secrets.GIST_ID }}
@@ -65,7 +66,7 @@ Next, statistics will be updated automatically every day. Pin this gist on your 
 
 ```yaml
 - name: WakaTime Box
-  uses: abordage/wakatime-box@v3
+  uses: abordage/wakatime-box@v3.0.1
   with:
     GH_TOKEN: ${{ secrets.GH_TOKEN }}
     GIST_ID: ${{ secrets.GIST_ID }}
@@ -80,7 +81,7 @@ Next, statistics will be updated automatically every day. Pin this gist on your 
 
 ```yaml
 - name: WakaTime Box
-  uses: abordage/wakatime-box@v3
+  uses: abordage/wakatime-box@v3.0.1
   with:
     GH_TOKEN: ${{ secrets.GH_TOKEN }}
     GIST_ID: ${{ secrets.GIST_ID }}
@@ -94,7 +95,7 @@ Next, statistics will be updated automatically every day. Pin this gist on your 
 |--------------------|-----------------------------------------------------------------------------|----------|--------------------------------|
 | `GH_TOKEN`         | GitHub token with gist scope                                                | Yes      | -                              |
 | `GIST_ID`          | ID of the Gist to update                                                    | Yes      | -                              |
-| `WAKA_API_KEY`     | API key for your WakaTime account                                           | Yes      | -                              |
+| `WAKA_API_KEY`     | WakaTime OAuth token, or a Wakapi API key                                   | Yes      | -                              |
 | `WAKATIME_BASE_URL`| Base URL for WakaTime API (for self-hosted like Wakapi)                     | No       | `https://wakatime.com/api/v1`  |
 | `DATE_RANGE`       | Time range: `last_7_days`, `last_30_days`, `last_6_months`, `last_year`, `all_time` | No | `last_7_days`            |
 | `MAX_RESULT`       | Maximum number of languages to display                                      | No       | `5`                            |
