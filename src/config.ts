@@ -1,9 +1,10 @@
 import * as core from '@actions/core';
-import { DATE_RANGES, type ActionInputs, type DateRange } from './types.js';
+import { CARDS, DATE_RANGES, type ActionInputs, type Card, type DateRange } from './types.js';
 
 const DEFAULT_WAKATIME_BASE_URL = 'https://wakatime.com/api/v1';
 const DEFAULT_MAX_RESULT = 5;
 const DEFAULT_DATE_RANGE: DateRange = 'last_7_days';
+const DEFAULT_CARD: Card = 'models';
 
 export function isRunningInGitHubActions(): boolean {
   return process.env.GITHUB_ACTIONS === 'true';
@@ -48,7 +49,7 @@ function getNumberInput(key: string, defaultValue: number): number {
 
 function getDateRangeInput(): DateRange {
   const value = getInputWithDefault('DATE_RANGE', DEFAULT_DATE_RANGE);
-  const normalized = value.toLowerCase();
+  const normalized = value.trim().toLowerCase();
 
   if (!DATE_RANGES.includes(normalized as DateRange)) {
     console.warn(`Invalid DATE_RANGE "${value}", using default "${DEFAULT_DATE_RANGE}"`);
@@ -56,6 +57,18 @@ function getDateRangeInput(): DateRange {
   }
 
   return normalized as DateRange;
+}
+
+function getCardInput(): Card {
+  const value = getInputWithDefault('CARD', DEFAULT_CARD);
+  const normalized = value.trim().toLowerCase();
+
+  if (!CARDS.includes(normalized as Card)) {
+    console.warn(`Invalid CARD "${value}", using default "${DEFAULT_CARD}"`);
+    return DEFAULT_CARD;
+  }
+
+  return normalized as Card;
 }
 
 export function getInputs(): ActionInputs {
@@ -66,6 +79,7 @@ export function getInputs(): ActionInputs {
     gistId: getInput('GIST_ID', true),
     maxResult: getNumberInput('MAX_RESULT', DEFAULT_MAX_RESULT),
     dateRange: getDateRangeInput(),
+    card: getCardInput(),
     printSummary: getBooleanInput('PRINT_SUMMARY', true),
     useOldFormat: getBooleanInput('USE_OLD_FORMAT', false),
   };

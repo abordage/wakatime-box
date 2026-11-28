@@ -24,8 +24,9 @@ Automatically update your pinned gist with weekly (monthly, yearly) WakaTime sta
 ## Features
 
 - **Customizable time range**: Weekly, monthly, 6-month, yearly, or all-time statistics
-- **Customizable languages count**: Display top N languages
-- **Smart "Other" category**: Correctly aggregates minor languages and non-code files
+- **One card per gist**: `models` for AI line changes, or `languages` for coding time
+- **Customizable row count**: Display the top N rows on the selected card
+- **Smart "Other" row**: Folds minor languages and non-code files on the languages card, and folds extra models on the models card
 - **Two display formats**: Modern dotted format or classic bar chart
 - **Self-hosted support**: Works with Wakapi and other WakaTime-compatible backends
 - **Pinned Gist**: Perfect for your GitHub profile
@@ -55,7 +56,7 @@ Next, statistics will be updated automatically every day. Pin this gist on your 
 
 ```yaml
 - name: WakaTime Box
-  uses: abordage/wakatime-box@v3.0.1
+  uses: abordage/wakatime-box@v4.0.0
   with:
     GH_TOKEN: ${{ secrets.GH_TOKEN }}
     GIST_ID: ${{ secrets.GIST_ID }}
@@ -66,22 +67,41 @@ Next, statistics will be updated automatically every day. Pin this gist on your 
 
 ```yaml
 - name: WakaTime Box
-  uses: abordage/wakatime-box@v3.0.1
+  uses: abordage/wakatime-box@v4.0.0
   with:
     GH_TOKEN: ${{ secrets.GH_TOKEN }}
     GIST_ID: ${{ secrets.GIST_ID }}
     WAKA_API_KEY: ${{ secrets.WAKA_API_KEY }}
     DATE_RANGE: 'last_7_days'
+    CARD: 'models'
     MAX_RESULT: '5'
     USE_OLD_FORMAT: 'false'
     PRINT_SUMMARY: 'true'
+```
+
+### Cards
+
+`CARD` chooses the only card written into the gist. The default is `models`: AI models ranked by lines added or removed. A model row shows a compact line count such as `12.4k`, and the percent is that model's share of AI line changes. `languages` shows coding time.
+
+Upgrading from v3: a workflow that omits `CARD` now publishes the models card and renames the gist file. Set `CARD: languages` to keep the language card.
+
+To show both cards on a profile, add a second public gist and a second step with its own `GIST_ID` and `CARD`.
+
+```yaml
+- name: WakaTime Languages
+  uses: abordage/wakatime-box@v4.0.0
+  with:
+    GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    GIST_ID: ${{ secrets.LANGUAGES_GIST_ID }}
+    WAKA_API_KEY: ${{ secrets.WAKA_API_KEY }}
+    CARD: 'languages'
 ```
 
 ### With self-hosted backend (Wakapi)
 
 ```yaml
 - name: WakaTime Box
-  uses: abordage/wakatime-box@v3.0.1
+  uses: abordage/wakatime-box@v4.0.0
   with:
     GH_TOKEN: ${{ secrets.GH_TOKEN }}
     GIST_ID: ${{ secrets.GIST_ID }}
@@ -91,16 +111,17 @@ Next, statistics will be updated automatically every day. Pin this gist on your 
 
 ### Inputs
 
-| Input              | Description                                                                 | Required | Default                        |
-|--------------------|-----------------------------------------------------------------------------|----------|--------------------------------|
-| `GH_TOKEN`         | GitHub token with gist scope                                                | Yes      | -                              |
-| `GIST_ID`          | ID of the Gist to update                                                    | Yes      | -                              |
-| `WAKA_API_KEY`     | WakaTime OAuth token, or a Wakapi API key                                   | Yes      | -                              |
-| `WAKATIME_BASE_URL`| Base URL for WakaTime API (for self-hosted like Wakapi)                     | No       | `https://wakatime.com/api/v1`  |
-| `DATE_RANGE`       | Time range: `last_7_days`, `last_30_days`, `last_6_months`, `last_year`, `all_time` | No | `last_7_days`            |
-| `MAX_RESULT`       | Maximum number of languages to display                                      | No       | `5`                            |
-| `USE_OLD_FORMAT`   | Use old format with bar chart                                               | No       | `false`                        |
-| `PRINT_SUMMARY`    | Print summary to GitHub Actions                                             | No       | `true`                         |
+| Input               | Description                                                                         | Required | Default                       |
+|---------------------|-------------------------------------------------------------------------------------|----------|-------------------------------|
+| `GH_TOKEN`          | GitHub token with gist scope                                                        | Yes      | -                             |
+| `GIST_ID`           | ID of the Gist to update                                                            | Yes      | -                             |
+| `WAKA_API_KEY`      | WakaTime OAuth token, or a Wakapi API key                                           | Yes      | -                             |
+| `WAKATIME_BASE_URL` | Base URL for WakaTime API (for self-hosted like Wakapi)                             | No       | `https://wakatime.com/api/v1` |
+| `DATE_RANGE`        | Time range: `last_7_days`, `last_30_days`, `last_6_months`, `last_year`, `all_time` | No       | `last_7_days`                 |
+| `CARD`              | Card to publish: `models` or `languages`. One gist shows one card                   | No       | `models`                      |
+| `MAX_RESULT`        | Maximum number of rows to display on the card                                       | No       | `5`                           |
+| `USE_OLD_FORMAT`    | Use old format with bar chart                                                       | No       | `false`                       |
+| `PRINT_SUMMARY`     | Print summary to GitHub Actions                                                     | No       | `true`                        |
 
 ## Feedback
 

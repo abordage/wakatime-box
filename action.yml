@@ -20,12 +20,16 @@ inputs:
     default: 'https://wakatime.com/api/v1'
 
   MAX_RESULT:
-    description: 'Maximum number of languages to display'
+    description: 'Maximum number of rows to display on the card'
     default: '5'
 
   DATE_RANGE:
     description: 'Time range for statistics (last_7_days, last_30_days, last_6_months, last_year, all_time)'
     default: 'last_7_days'
+
+  CARD:
+    description: 'Which card to publish: models (AI line changes) or languages (coding time). One gist shows one card.'
+    default: 'models'
 
   PRINT_SUMMARY:
     description: 'Print summary to GitHub Actions summary'

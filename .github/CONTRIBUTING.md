@@ -115,6 +115,9 @@ npm run typecheck
 # Lint code
 npm run lint
 npm run lint:fix
+
+# Run unit tests. This does not write to GitHub.
+npm test
 ```
 
 ### 4. Build
@@ -153,9 +156,10 @@ Fill in required values:
 GH_TOKEN=your_github_token
 GIST_ID=your_gist_id
 WAKA_API_KEY=your_wakatime_oauth_token
+# CARD=models
 ```
 
-Run locally:
+`npm test` checks rendering without updating the gist. `npm run start` publishes the card selected by `CARD` (models when unset):
 
 ```bash
 npm run start
@@ -197,4 +201,3 @@ When reporting bugs, please include:
 - **Documentation**: Check README.md
 
 Thank you for contributing to WakaTime Box!
-

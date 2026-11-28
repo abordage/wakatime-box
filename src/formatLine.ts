@@ -1,3 +1,5 @@
+import type { Measure } from './types.js';
+
 const TIME = {
   SECONDS_IN_DAY: 24 * 60 * 60,
   SECONDS_IN_HOUR: 60 * 60,
@@ -25,19 +27,49 @@ const FORMAT = {
   DOT: '.',
 } as const;
 
+const COUNT_UNITS = ['', 'k', 'm', 'b'] as const;
+
 export function formatLine(
   name: string,
-  totalSeconds: number,
+  amount: number,
   percent: number,
-  useOldFormat: boolean
+  useOldFormat: boolean,
+  measure: Measure = 'time'
 ): string {
-  const displayName = truncateString(name, FORMAT.NAME_TRUNCATE_LENGTH);
-  const formattedTime = formatTime(totalSeconds);
+  const nameLimit = measure === 'lines'
+    ? (useOldFormat ? FORMAT.NAME_LENGTH_OLD : FORMAT.NAME_LENGTH_NEW)
+    : FORMAT.NAME_TRUNCATE_LENGTH;
+  const displayName = truncateString(name, nameLimit);
+  const formattedValue = measure === 'lines' ? formatCount(amount) : formatTime(amount);
   const formattedPercent = percent.toFixed(1);
 
   return useOldFormat
-    ? formatOldLine(displayName, formattedTime, formattedPercent, percent)
-    : formatNewLine(displayName, formattedTime, formattedPercent);
+    ? formatOldLine(displayName, formattedValue, formattedPercent, percent)
+    : formatNewLine(displayName, formattedValue, formattedPercent);
+}
+
+export function formatCount(value: number): string {
+  if (!Number.isFinite(value)) {
+    return '0';
+  }
+
+  const rounded = Math.round(value);
+  const sign = rounded < 0 ? '-' : '';
+  let absolute = Math.abs(rounded);
+  let unitIndex = 0;
+
+  while (absolute >= 1000 && unitIndex < COUNT_UNITS.length - 1) {
+    absolute /= 1000;
+    unitIndex += 1;
+  }
+
+  if (unitIndex < COUNT_UNITS.length - 1 && Number(absolute.toFixed(1)) >= 1000) {
+    absolute /= 1000;
+    unitIndex += 1;
+  }
+
+  const body = unitIndex === 0 ? String(Math.round(absolute)) : trimOneDecimal(absolute);
+  return `${sign}${body}${COUNT_UNITS[unitIndex]}`;
 }
 
 function formatTime(seconds: number): string {
@@ -60,6 +92,11 @@ function formatTime(seconds: number): string {
   }
 
   return `${Math.round(seconds)}s`;
+}
+
+function trimOneDecimal(value: number): string {
+  const fixed = value.toFixed(1);
+  return fixed.endsWith('.0') ? fixed.slice(0, -2) : fixed;
 }
 
 function truncateString(str: string, maxLength: number): string {
@@ -86,22 +123,22 @@ function generateBarChart(percent: number): string {
 
 function formatOldLine(
   name: string,
-  time: string,
+  value: string,
   percent: string,
   percentValue: number
 ): string {
   const paddedName = name.padEnd(FORMAT.NAME_LENGTH_OLD);
-  const timeWithIcon = `${FORMAT.TIME_ICON} ${time.padEnd(FORMAT.TIME_PADDING)}`;
+  const valueWithIcon = `${FORMAT.TIME_ICON} ${value.padEnd(FORMAT.TIME_PADDING)}`;
   const bar = generateBarChart(percentValue);
   const paddedPercent = percent.padStart(FORMAT.PERCENT_PADDING) + '%';
 
-  return [paddedName, timeWithIcon, bar, paddedPercent].join(' ');
+  return [paddedName, valueWithIcon, bar, paddedPercent].join(' ');
 }
 
-function formatNewLine(name: string, time: string, percent: string): string {
+function formatNewLine(name: string, value: string, percent: string): string {
   const paddedName = name.padEnd(FORMAT.NAME_LENGTH_NEW, FORMAT.DOT);
-  const paddedTime = (time + ' ').padEnd(FORMAT.TIME_PADDING_NEW, FORMAT.DOT);
+  const paddedValue = (value + ' ').padEnd(FORMAT.TIME_PADDING_NEW, FORMAT.DOT);
   const paddedPercent = percent.padStart(FORMAT.PERCENT_PADDING_NEW, FORMAT.DOT) + '%';
 
-  return paddedName + ' ' + paddedTime + paddedPercent;
+  return paddedName + ' ' + paddedValue + paddedPercent;
 }
