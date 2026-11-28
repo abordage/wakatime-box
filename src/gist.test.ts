@@ -26,11 +26,11 @@ test('language title stays the same', () => {
 test('model title names the card', () => {
   assert.equal(
     generateTitle('last_7_days', 'Nov 28, 2026', 'models'),
-    'My weekly AI models [update Nov 28, 2026]'
+    'My weekly AI [update Nov 28, 2026]'
   );
   assert.equal(
     generateTitle('last_6_months', 'Nov 28, 2026', 'models'),
-    'My 6-month AI models [update Nov 28, 2026]'
+    'My 6-month AI [update Nov 28, 2026]'
   );
 });
 
