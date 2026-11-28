@@ -81,7 +81,7 @@ Next, statistics will be updated automatically every day. Pin this gist on your 
 
 ### Cards
 
-`CARD` chooses the only card written into the gist. The default is `models`: AI models ranked by lines added or removed. A model row shows a compact line count such as `12.4k`, and the percent is that model's share of AI line changes. `languages` shows coding time.
+`CARD` chooses the only card written into the gist. The default is `models`: AI models ranked by lines added or removed. A model row shows that model's share of AI line changes. `languages` shows coding time.
 
 Upgrading from v3: a workflow that omits `CARD` now publishes the models card and renames the gist file. Set `CARD: languages` to keep the language card.
 

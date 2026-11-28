@@ -13,7 +13,7 @@ const RANGE_LABELS: Record<DateRange, string> = {
 
 const CARD_SUBJECTS: Record<Card, string> = {
   languages: 'stack',
-  models: 'AI models',
+  models: 'AI',
 };
 
 export function cardMeasure(card: Card): Measure {
