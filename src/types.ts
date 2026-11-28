@@ -8,6 +8,12 @@ export const DATE_RANGES = [
 
 export type DateRange = typeof DATE_RANGES[number];
 
+export const CARDS = ['languages', 'models'] as const;
+
+export type Card = typeof CARDS[number];
+
+export type Measure = 'time' | 'lines';
+
 export interface ActionInputs {
   ghToken: string;
   wakatimeApiKey: string;
@@ -15,6 +21,7 @@ export interface ActionInputs {
   gistId: string;
   maxResult: number;
   dateRange: DateRange;
+  card: Card;
   printSummary: boolean;
   useOldFormat: boolean;
 }
@@ -23,6 +30,23 @@ export interface WakaTimeLanguage {
   name: string;
   percent: number;
   total_seconds: number;
+}
+
+export interface WakaTimeModel {
+  name: string;
+  lines: number;
+}
+
+export interface WakaTimeStats {
+  languages: WakaTimeLanguage[];
+  models: WakaTimeModel[];
+  isUpToDate: boolean;
+}
+
+export interface StatRow {
+  name: string;
+  amount: number;
+  percent: number;
 }
 
 export const OTHER_LANGUAGES = [

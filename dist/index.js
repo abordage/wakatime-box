@@ -29737,6 +29737,7 @@ const DATE_RANGES = [
     'last_year',
     'all_time',
 ];
+const CARDS = ['languages', 'models'];
 const OTHER_LANGUAGES = [
     'Other',
     'AUTO_DETECTED',
@@ -29753,6 +29754,7 @@ const OTHER_LANGUAGES = [
 const DEFAULT_WAKATIME_BASE_URL = 'https://wakatime.com/api/v1';
 const DEFAULT_MAX_RESULT = 5;
 const DEFAULT_DATE_RANGE = 'last_7_days';
+const DEFAULT_CARD = 'models';
 function isRunningInGitHubActions() {
     return process.env.GITHUB_ACTIONS === 'true';
 }
@@ -29790,10 +29792,19 @@ function getNumberInput(key, defaultValue) {
 }
 function getDateRangeInput() {
     const value = getInputWithDefault('DATE_RANGE', DEFAULT_DATE_RANGE);
-    const normalized = value.toLowerCase();
+    const normalized = value.trim().toLowerCase();
     if (!DATE_RANGES.includes(normalized)) {
         console.warn(`Invalid DATE_RANGE "${value}", using default "${DEFAULT_DATE_RANGE}"`);
         return DEFAULT_DATE_RANGE;
+    }
+    return normalized;
+}
+function getCardInput() {
+    const value = getInputWithDefault('CARD', DEFAULT_CARD);
+    const normalized = value.trim().toLowerCase();
+    if (!CARDS.includes(normalized)) {
+        console.warn(`Invalid CARD "${value}", using default "${DEFAULT_CARD}"`);
+        return DEFAULT_CARD;
     }
     return normalized;
 }
@@ -29805,6 +29816,7 @@ function getInputs() {
         gistId: getInput('GIST_ID', true),
         maxResult: getNumberInput('MAX_RESULT', DEFAULT_MAX_RESULT),
         dateRange: getDateRangeInput(),
+        card: getCardInput(),
         printSummary: getBooleanInput('PRINT_SUMMARY', true),
         useOldFormat: getBooleanInput('USE_OLD_FORMAT', false),
     };
@@ -29831,14 +29843,125 @@ function authorizationHeader(secret) {
 }
 
 const USER_AGENT = 'WakaTime-Gist/3.0 +https://github.com/marketplace/actions/wakatime-gist';
+const DEFAULT_STATS_ATTEMPTS = 3;
+const DEFAULT_STATS_RETRY_DELAY_MS = 2000;
 async function fetchStatistics(baseUrl, dateRange, apiKey) {
     const httpClient = new HttpClient(USER_AGENT);
     const authHeader = authorizationHeader(apiKey);
-    const response = await httpClient.getJson(`${baseUrl}/users/current/stats/${dateRange}`, { Authorization: authHeader });
-    if (!response.result?.data?.languages) {
+    return loadCurrentStats(async () => {
+        const response = await httpClient.getJson(`${baseUrl}/users/current/stats/${dateRange}`, { Authorization: authHeader });
+        return readStats(response.result?.data);
+    });
+}
+async function loadCurrentStats(load, options = {}) {
+    const attempts = options.attempts ?? DEFAULT_STATS_ATTEMPTS;
+    const retryDelayMs = options.retryDelayMs ?? DEFAULT_STATS_RETRY_DELAY_MS;
+    const wait = options.wait ?? delay;
+    const warn = options.warn ?? console.warn;
+    let latest;
+    for (let attempt = 1; attempt <= attempts; attempt++) {
+        latest = await load();
+        if (latest.isUpToDate || attempt === attempts) {
+            if (!latest.isUpToDate) {
+                warn('WakaTime stats are not up to date. Using the latest response.');
+            }
+            return latest;
+        }
+        warn(`WakaTime stats are not up to date (attempt ${attempt} of ${attempts}). Retrying...`);
+        await wait(retryDelayMs);
+    }
+    throw new Error('Empty response from WakaTime API');
+}
+function readStats(data) {
+    if (!isRecord(data)) {
         throw new Error('Empty response from WakaTime API');
     }
-    return response.result.data.languages;
+    const languages = Array.isArray(data.languages) ? parseLanguages(data.languages) : null;
+    const models = parseModels(data);
+    const sawModels = Array.isArray(data.ai_model_breakdown) || isRecord(data.ai_model_line_changes);
+    if (languages === null && !sawModels) {
+        throw new Error('Empty response from WakaTime API');
+    }
+    return {
+        languages: languages ?? [],
+        models,
+        isUpToDate: data.is_up_to_date !== false,
+    };
+}
+function parseLanguages(value) {
+    const languages = [];
+    for (const item of value) {
+        if (!isRecord(item) || typeof item.name !== 'string') {
+            continue;
+        }
+        const totalSeconds = finiteNumber(item.total_seconds);
+        const percent = finiteNumber(item.percent);
+        if (totalSeconds === null || percent === null) {
+            continue;
+        }
+        languages.push({
+            name: item.name,
+            total_seconds: totalSeconds,
+            percent,
+        });
+    }
+    return languages;
+}
+function parseModels(data) {
+    const breakdown = parseBreakdown(data.ai_model_breakdown);
+    if (breakdown.length > 0) {
+        return breakdown;
+    }
+    return parseLineChangeMap(data.ai_model_line_changes);
+}
+function parseBreakdown(value) {
+    if (!Array.isArray(value)) {
+        return [];
+    }
+    const models = [];
+    for (const item of value) {
+        if (!isRecord(item) || typeof item.name !== 'string') {
+            continue;
+        }
+        const lines = finiteNumber(item.lines);
+        if (lines === null || lines <= 0) {
+            continue;
+        }
+        models.push({ name: item.name, lines });
+    }
+    return models;
+}
+function parseLineChangeMap(value) {
+    if (!isRecord(value)) {
+        return [];
+    }
+    const models = [];
+    for (const [name, rawLines] of Object.entries(value)) {
+        const lines = finiteNumber(rawLines);
+        if (lines === null || lines <= 0) {
+            continue;
+        }
+        models.push({ name, lines });
+    }
+    return models;
+}
+function finiteNumber(value) {
+    if (typeof value === 'number') {
+        return Number.isFinite(value) ? value : null;
+    }
+    if (typeof value === 'string' && value.trim() !== '') {
+        const parsed = Number(value);
+        return Number.isFinite(parsed) ? parsed : null;
+    }
+    return null;
+}
+function isRecord(value) {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+function delay(ms) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
 }
 
 function getUserAgent() {
@@ -33793,13 +33916,36 @@ const FORMAT = {
     ELLIPSIS: '...',
     DOT: '.',
 };
-function formatLine(name, totalSeconds, percent, useOldFormat) {
-    const displayName = truncateString(name, FORMAT.NAME_TRUNCATE_LENGTH);
-    const formattedTime = formatTime(totalSeconds);
+const COUNT_UNITS = ['', 'k', 'm', 'b'];
+function formatLine(name, amount, percent, useOldFormat, measure = 'time') {
+    const nameLimit = measure === 'lines'
+        ? (useOldFormat ? FORMAT.NAME_LENGTH_OLD : FORMAT.NAME_LENGTH_NEW)
+        : FORMAT.NAME_TRUNCATE_LENGTH;
+    const displayName = truncateString(name, nameLimit);
+    const formattedValue = measure === 'lines' ? formatCount(amount) : formatTime(amount);
     const formattedPercent = percent.toFixed(1);
     return useOldFormat
-        ? formatOldLine(displayName, formattedTime, formattedPercent, percent)
-        : formatNewLine(displayName, formattedTime, formattedPercent);
+        ? formatOldLine(displayName, formattedValue, formattedPercent, percent)
+        : formatNewLine(displayName, formattedValue, formattedPercent);
+}
+function formatCount(value) {
+    if (!Number.isFinite(value)) {
+        return '0';
+    }
+    const rounded = Math.round(value);
+    const sign = rounded < 0 ? '-' : '';
+    let absolute = Math.abs(rounded);
+    let unitIndex = 0;
+    while (absolute >= 1000 && unitIndex < COUNT_UNITS.length - 1) {
+        absolute /= 1000;
+        unitIndex += 1;
+    }
+    if (unitIndex < COUNT_UNITS.length - 1 && Number(absolute.toFixed(1)) >= 1000) {
+        absolute /= 1000;
+        unitIndex += 1;
+    }
+    const body = unitIndex === 0 ? String(Math.round(absolute)) : trimOneDecimal(absolute);
+    return `${sign}${body}${COUNT_UNITS[unitIndex]}`;
 }
 function formatTime(seconds) {
     const days = Math.floor(seconds / TIME.SECONDS_IN_DAY);
@@ -33819,6 +33965,10 @@ function formatTime(seconds) {
     }
     return `${Math.round(seconds)}s`;
 }
+function trimOneDecimal(value) {
+    const fixed = value.toFixed(1);
+    return fixed.endsWith('.0') ? fixed.slice(0, -2) : fixed;
+}
 function truncateString(str, maxLength) {
     if (str.length <= maxLength) {
         return str;
@@ -33836,47 +33986,71 @@ function generateBarChart(percent) {
     const emptyBars = BAR_CHART.EMPTY.repeat(BAR_CHART.SIZE - fullBars - 1);
     return BAR_CHART.FULL.repeat(fullBars) + partialBar + emptyBars;
 }
-function formatOldLine(name, time, percent, percentValue) {
+function formatOldLine(name, value, percent, percentValue) {
     const paddedName = name.padEnd(FORMAT.NAME_LENGTH_OLD);
-    const timeWithIcon = `${FORMAT.TIME_ICON} ${time.padEnd(FORMAT.TIME_PADDING)}`;
+    const valueWithIcon = `${FORMAT.TIME_ICON} ${value.padEnd(FORMAT.TIME_PADDING)}`;
     const bar = generateBarChart(percentValue);
     const paddedPercent = percent.padStart(FORMAT.PERCENT_PADDING) + '%';
-    return [paddedName, timeWithIcon, bar, paddedPercent].join(' ');
+    return [paddedName, valueWithIcon, bar, paddedPercent].join(' ');
 }
-function formatNewLine(name, time, percent) {
+function formatNewLine(name, value, percent) {
     const paddedName = name.padEnd(FORMAT.NAME_LENGTH_NEW, FORMAT.DOT);
-    const paddedTime = (time + ' ').padEnd(FORMAT.TIME_PADDING_NEW, FORMAT.DOT);
+    const paddedValue = (value + ' ').padEnd(FORMAT.TIME_PADDING_NEW, FORMAT.DOT);
     const paddedPercent = percent.padStart(FORMAT.PERCENT_PADDING_NEW, FORMAT.DOT) + '%';
-    return paddedName + ' ' + paddedTime + paddedPercent;
+    return paddedName + ' ' + paddedValue + paddedPercent;
 }
 
-function generateTitle(dateRange, updateDate) {
-    const rangeLabels = {
-        last_7_days: 'weekly',
-        last_30_days: 'monthly',
-        last_6_months: '6-month',
-        last_year: 'yearly',
-        all_time: 'all-time',
-    };
-    const label = rangeLabels[dateRange] ?? 'latest';
-    return `My ${label} stack [update ${updateDate}]`;
+const RANGE_LABELS = {
+    last_7_days: 'weekly',
+    last_30_days: 'monthly',
+    last_6_months: '6-month',
+    last_year: 'yearly',
+    all_time: 'all-time',
+};
+const CARD_SUBJECTS = {
+    languages: 'stack',
+    models: 'AI models',
+};
+function cardMeasure(card) {
+    return card === 'models' ? 'lines' : 'time';
 }
-function generateGistContent(languages, maxResult, useOldFormat) {
-    let otherTotalSeconds = 0;
+function emptyCardMessage(card) {
+    if (card === 'models') {
+        return 'No AI model statistics for the selected time period. Gist not updated.';
+    }
+    return 'No statistics for the selected time period. Gist not updated.';
+}
+function generateTitle(dateRange, updateDate, card) {
+    const label = RANGE_LABELS[dateRange] ?? 'latest';
+    return `My ${label} ${CARD_SUBJECTS[card]} [update ${updateDate}]`;
+}
+function rowsForCard(stats, card) {
+    if (card === 'models') {
+        return modelRows(stats.models);
+    }
+    return stats.languages.map((language) => ({
+        name: language.name,
+        amount: language.total_seconds,
+        percent: language.percent,
+    }));
+}
+function generateGistContent(rows, maxResult, useOldFormat, measure) {
+    const mergeNames = measure === 'time' ? OTHER_LANGUAGES : [];
+    let otherAmount = 0;
     let otherPercent = 0;
     const lines = [];
-    for (const lang of languages) {
-        const isOtherLanguage = OTHER_LANGUAGES.includes(lang.name);
+    for (const row of rows) {
+        const isMerged = mergeNames.includes(row.name);
         const isOverLimit = lines.length >= maxResult - 1;
-        if (isOtherLanguage || isOverLimit) {
-            otherTotalSeconds += lang.total_seconds;
-            otherPercent += lang.percent;
+        if (isMerged || isOverLimit) {
+            otherAmount += row.amount;
+            otherPercent += row.percent;
             continue;
         }
-        lines.push(formatLine(lang.name, lang.total_seconds, lang.percent, useOldFormat));
+        lines.push(formatLine(row.name, row.amount, row.percent, useOldFormat, measure));
     }
-    if (otherTotalSeconds > 0 || otherPercent > 0) {
-        lines.push(formatLine('Other', otherTotalSeconds, otherPercent, useOldFormat));
+    if (otherAmount > 0 || otherPercent > 0) {
+        lines.push(formatLine('Other', otherAmount, otherPercent, useOldFormat, measure));
     }
     return lines.join('\n');
 }
@@ -33901,22 +34075,43 @@ async function updateGist(token, gistId, title, content) {
         },
     });
 }
+function modelRows(models) {
+    const totals = new Map();
+    for (const model of models) {
+        const name = model.name.trim();
+        if (name === '' || !Number.isFinite(model.lines)) {
+            continue;
+        }
+        totals.set(name, (totals.get(name) ?? 0) + model.lines);
+    }
+    const ranked = [...totals.entries()]
+        .map(([name, lines]) => ({ name, lines: Math.round(lines) }))
+        .filter((model) => model.lines > 0)
+        .sort((left, right) => right.lines - left.lines || left.name.localeCompare(right.name));
+    const total = ranked.reduce((sum, model) => sum + model.lines, 0);
+    return ranked.map((model) => ({
+        name: model.name,
+        amount: model.lines,
+        percent: total === 0 ? 0 : (model.lines / total) * 100,
+    }));
+}
 
 const ACTION_URL = 'https://github.com/marketplace/actions/wakatime-gist';
 const ACTION_VERSION = '3.0';
-function buildSummaryTable() {
+function buildSummaryTable(card) {
     return [
         [{ data: 'Action', header: true }, { data: 'Result', header: true }],
+        ['Card', card],
         ['Statistics received', '\u2714'],
         ['Gist updated', '\u2714'],
     ];
 }
-async function printSummary(shouldWrite) {
+async function printSummary(shouldWrite, card) {
     if (!isRunningInGitHubActions()) {
-        printToConsole();
+        printToConsole(card);
         return;
     }
-    const table = buildSummaryTable();
+    const table = buildSummaryTable(card);
     const summary$1 = summary
         .addHeading('Results')
         .addTable(table)
@@ -33929,8 +34124,9 @@ async function printSummary(shouldWrite) {
         console.log(summary$1.stringify());
     }
 }
-function printToConsole() {
+function printToConsole(card) {
     console.log('\n=== WakaTime Statistics ===');
+    console.log(`Card: ${card}`);
     console.log('Statistics received: OK');
     console.log('Gist updated: OK');
     console.log('===========================\n');
@@ -33939,22 +34135,23 @@ function printToConsole() {
 async function run() {
     await loadEnvForLocalDev();
     const inputs = getInputs();
-    console.log(`Fetching WakaTime statistics (${inputs.dateRange})...`);
-    const languages = await fetchStatistics(inputs.wakatimeBaseUrl, inputs.dateRange, inputs.wakatimeApiKey);
-    if (languages.length === 0) {
-        console.log('No statistics for the selected time period. Gist not updated.');
+    console.log(`Fetching WakaTime statistics (${inputs.dateRange}, ${inputs.card})...`);
+    const stats = await fetchStatistics(inputs.wakatimeBaseUrl, inputs.dateRange, inputs.wakatimeApiKey);
+    const rows = rowsForCard(stats, inputs.card);
+    if (rows.length === 0) {
+        console.log(emptyCardMessage(inputs.card));
         return;
     }
-    const content = generateGistContent(languages, inputs.maxResult, inputs.useOldFormat);
+    const content = generateGistContent(rows, inputs.maxResult, inputs.useOldFormat, cardMeasure(inputs.card));
     const updateDate = new Date().toLocaleDateString('en-us', {
         day: 'numeric',
         year: 'numeric',
         month: 'short',
     });
-    const title = generateTitle(inputs.dateRange, updateDate);
+    const title = generateTitle(inputs.dateRange, updateDate, inputs.card);
     await updateGist(inputs.ghToken, inputs.gistId, title, content);
     console.log('Gist updated successfully!');
-    await printSummary(inputs.printSummary);
+    await printSummary(inputs.printSummary, inputs.card);
 }
 run().catch((error) => {
     if (isRunningInGitHubActions()) {
