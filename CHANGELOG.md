@@ -1,3 +1,10 @@
+## [4.0.1](https://github.com/abordage/wakatime-box/compare/v4.0.0...v4.0.1) (2026-11-28)
+
+
+### Bug Fixes
+
+* **gist:** fit the AI card title and drop line counts ([bf1af3e](https://github.com/abordage/wakatime-box/commit/bf1af3e76a77e76a2e6f869542cd68be756751e7))
+
 # [4.0.0](https://github.com/abordage/wakatime-box/compare/v3.0.1...v4.0.0) (2026-11-28)
 
 
