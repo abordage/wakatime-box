@@ -1,3 +1,15 @@
+# [4.0.0](https://github.com/abordage/wakatime-box/compare/v3.0.1...v4.0.0) (2026-11-28)
+
+
+* feat(gist)!: publish one card and default to AI models ([757d699](https://github.com/abordage/wakatime-box/commit/757d6991a193f59d510e8275f4202948d76e031c))
+
+
+### BREAKING CHANGES
+
+* A workflow that omits CARD now publishes the AI models card and renames the gist file. Set CARD to languages to keep the language card.
+
+Rank models by lines added or removed. Leave the gist unchanged when the selected card has no rows.
+
 ## [3.0.1](https://github.com/abordage/wakatime-box/compare/v3.0.0...v3.0.1) (2026-11-04)
 
 
